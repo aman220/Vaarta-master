@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+
+
+    <item android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search"
+        android:title="search"/>
+
+    <item android:id="@+id/menu_music"
+        android:icon="@drawable/ic_camera"
+        android:title="Camera"/>
+
+    <item android:id="@+id/menu_account"
+        android:icon="@drawable/ic_account"
+        android:title="account" />
+
+</menu>
