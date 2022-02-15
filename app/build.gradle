@@ -56,9 +56,14 @@ dependencies {
 
     //firebase
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
-    implementation 'com.google.firebase:firebase-firestore:23.0.3'
+    implementation 'com.google.firebase:firebase-firestore:23.0.1'
+    implementation 'com.google.firebase:firebase-storage:9.2.1'
     implementation 'com.google.firebase:firebase-core:19.0.0'
     implementation 'com.google.firebase:firebase-iid:21.1.0'
+    implementation 'com.google.firebase:firebase-ml-natural-language:22.0.1'
+    implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.8'
+    implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.9'
+
 
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'

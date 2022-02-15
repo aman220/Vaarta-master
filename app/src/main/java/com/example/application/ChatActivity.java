@@ -13,16 +13,17 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
 import com.example.application.activities.BaseActivity;
 import com.example.application.adapters.ChatAdapter;
 import com.example.application.databinding.ActivityChatBinding;
 import com.example.application.models.ChatMessage;
+import com.example.application.models.ImageMessage;
 import com.example.application.models.User;
 import com.example.application.network.ApiClient;
 import com.example.application.network.ApiService;
@@ -35,6 +36,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +59,7 @@ public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
     private List<ChatMessage> chatMessages;
+    private List<ImageMessage> imageMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
@@ -64,6 +67,9 @@ public class ChatActivity extends BaseActivity {
     private Boolean isReceiverAvailable = false;
     private List<String> languageArrayList;
     private Handler handler = new Handler();
+    private final Bundle bundleLangSet  = new Bundle();
+    private int fromCode = 0;
+    private int toCode = 0;
 
 
     @Override
@@ -91,48 +97,110 @@ public class ChatActivity extends BaseActivity {
                 binding.translateMenu.setVisibility(View.GONE);
             }
         });
-
-    }
-
-
-    private void initSpinner() {
-        String languageArray[] = {"Hindi", "English", "Mandarin", "Japanese", "Spanish", "Russian"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,languageArray);
-        languageArrayList = new ArrayList<>();
-        for (int i = 0; i < languageArray.length;i++){
-            languageArrayList.add(languageArray[i]);
-        }
-
-        setSpinner(binding.spinnerFromLanguage,languageArrayList);
-        setSpinner(binding.spinnerToLanguage,languageArrayList);
-    }
-
-
-
-    private void setSpinner(SmartMaterialSpinner<String> spinnerElement, List<String> languageArrayListTemp) {
-        spinnerElement.setItem(languageArrayListTemp);
-        spinnerElement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.chatRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING){
+//
+                }
             }
         });
     }
 
+
+    private void initSpinner() {
+        String[] languageArray = {"English", "African", "Arabic", "Belarusian", "Bulgarian", "Bengali",
+                "Catalan", "Czech", "Welsh", "Hindi", "Urdu" };
+        ArrayList<String> languageArrayList = new ArrayList<>();
+        Collections.addAll(languageArrayList, languageArray);
+        setSpinner(binding.spinnerFromLanguage, languageArrayList, "from");
+        setSpinner(binding.spinnerToLanguage, languageArrayList, "to");
+    }
+
+    private void setSpinner(SmartMaterialSpinner<String> spinnerElement, ArrayList<String> languageArrayListTemp , String type) {
+        spinnerElement.setItem(languageArrayListTemp);
+        if (type.equals("from")) {
+            spinnerElement.setSelection(languageArrayListTemp.indexOf(preferenceManager.getString(Constants.FROM_LANGUAGE)));
+        }else if (type.equals("to")) {
+            spinnerElement.setSelection(languageArrayListTemp.indexOf(preferenceManager.getString(Constants.TO_LANGUAGE)));
+        }
+        spinnerElement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if(type.equals("from")){
+                    preferenceManager.putString(Constants.FROM_LANGUAGE, adapterView.getItemAtPosition(position).toString());
+                    preferenceManager.putString(Constants.FROM_LANGUAGE_CODE, String.valueOf(getLanguageCode(adapterView.getItemAtPosition(position).toString())));
+//                    Toast.makeText(ChatActivity.this,"From : " + preferenceManager.getString(Constants.FROM_LANGUAGE) + " \n "
+//                            + " code " + preferenceManager.getString(Constants.FROM_LANGUAGE_CODE), Toast.LENGTH_SHORT).show();
+                }else if (type.equals("to")){
+                    preferenceManager.putString(Constants.TO_LANGUAGE, adapterView.getItemAtPosition(position).toString());
+                    preferenceManager.putString(Constants.TO_LANGUAGE_CODE, String.valueOf(getLanguageCode(adapterView.getItemAtPosition(position).toString())));
+                    Toast.makeText(ChatActivity.this,"To : " + preferenceManager.getString(Constants.TO_LANGUAGE) + " \n "
+                            + " code " + preferenceManager.getString(Constants.TO_LANGUAGE_CODE), Toast.LENGTH_SHORT).show();
+                }
+//                init();
+                binding.chatRecyclerView.setAdapter(chatAdapter);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { /* TODO document why this method is empty */ }
+        });
+    }
+
+    public int getLanguageCode(String language){
+        int languageCode;
+        switch (language){
+            case "English":
+                languageCode= FirebaseTranslateLanguage.EN;
+                break;
+            case "Africans":
+                languageCode= FirebaseTranslateLanguage.AF;
+                break;
+            case "Arabic":
+                languageCode= FirebaseTranslateLanguage.AR;
+                break;
+            case "Belarusian":
+                languageCode= FirebaseTranslateLanguage.BE;
+                break;
+            case "Bengali":
+                languageCode= FirebaseTranslateLanguage.BN;
+                break;
+            case "Catalan":
+                languageCode= FirebaseTranslateLanguage.CA;
+                break;
+            case "Czech":
+                languageCode= FirebaseTranslateLanguage.CS;
+                break;
+            case "Welsh":
+                languageCode= FirebaseTranslateLanguage.CY;
+                break;
+            case "Hindi":
+                languageCode= FirebaseTranslateLanguage.HI;
+                break;
+            case "Urdu":
+                languageCode= FirebaseTranslateLanguage.UR;
+                break;
+            default:
+                languageCode=0;
+        }
+        return languageCode;
+    }
+
     private void init() {
         preferenceManager = new PreferenceManager(getApplicationContext());
+        bundleLangSet.putInt("from",getLanguageCode(preferenceManager.getString(Constants.FROM_LANGUAGE)));
+        bundleLangSet.putInt("to",getLanguageCode(preferenceManager.getString(Constants.TO_LANGUAGE)));
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(
-                chatMessages,
+                chatMessages,imageMessages,
                 getBitmapFromEncodedString(receiverUser.getImage()),
-                preferenceManager.getString(Constants.KEY_USER_ID)
+                preferenceManager.getString(Constants.KEY_USER_ID),bundleLangSet
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
 
     }
+
 
 
     private void sendMessage() {
@@ -261,6 +329,10 @@ public class ChatActivity extends BaseActivity {
             }
         });
     }
+    public void goprofile(View view){
+        Intent i = new Intent(this, SendImage.class);
+        startActivity(i);
+    }
 
     private void listenerMessage() {
         database.collection(Constants.KEY_COLLECTION_CHAT)
@@ -384,7 +456,6 @@ public class ChatActivity extends BaseActivity {
         binding.inputMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            loadStatus();
             }
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(binding.inputMessage.getText().toString().trim().length()>0) {
@@ -405,45 +476,9 @@ public class ChatActivity extends BaseActivity {
                         setStatus("online");;
                     }
                 }, 3000);
-//                setStatus("online");
             }
 
         });
-        /*binding.inputMessage.addTextChangedListener(new TextWatcher() {
-            boolean isTyping = false;
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-            private Timer timer = new Timer();
-            private final long DELAY = 1000; // milliseconds
-            @Override
-            public void afterTextChanged(final Editable s) {
-                Log.d("", "");
-                if (!isTyping) {
-                    Log.d("status", "started typing");
-                    setStatus("typing");
-                    // Send notification for start typing event
-                    isTyping = true;
-                }
-                timer.cancel();
-                timer = new Timer();
-                timer.schedule(
-                        new TimerTask() {
-                            @Override
-                            public void run() {
-                                isTyping = false;
-                                Log.d("status", "stopped typing");
-                                setStatus("online");
-                                //send notification for stopped typing event
-                            }
-                        },
-                        DELAY
-                );
-            }
-        });*/
     }
 
     private void setStatus(String status) {
@@ -462,19 +497,7 @@ public class ChatActivity extends BaseActivity {
                 });
     }
 
-    /*private void loadStatus(){
-        database.collection(Constants.KEY_COLLECTION_USERS).document(
-                receiverUser.id
-        ).addSnapshotListener(ChatActivity.this, (value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null) {
-                receiverUser.status = value.getString(Constants.KEY_USER_STATUS);
-            }
-        });
-        binding.statusText.setText(receiverUser.status);
-    }*/
+
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -494,7 +517,6 @@ public class ChatActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         setStatus("online");
-//        loadStatus();
         handler.postDelayed(runnable, 1000);
         listenAvailabilityOfReceiver();
     }

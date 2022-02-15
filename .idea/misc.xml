@@ -4,15 +4,18 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/translate.xml" value="0.154" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_chat.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_main.xml" value="0.11865942028985507" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_chat.xml" value="0.2" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_main.xml" value="0.15" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_otp_send.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_otp_verify.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_send_image.xml" value="0.14447463768115942" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_profile.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_update.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_users.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_received_image.xml" value="0.33" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_recent_conversion.xml" value="0.17028985507246377" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_recevied_message.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_image.xml" value="0.25" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_message.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_story.xml" value="0.21" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_user.xml" value="0.17074275362318841" />

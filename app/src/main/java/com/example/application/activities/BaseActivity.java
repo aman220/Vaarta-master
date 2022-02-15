@@ -30,7 +30,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onPause();
         documentReference.update(Constants.KEY_AVAILABILITY,0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("h:mma d/M/yy");
-        documentReference.update(Constants.KEY_USER_STATUS,"Last Seen "+dateFormat.format(Calendar.getInstance().getTime()));
+        documentReference.update(Constants.KEY_USER_STATUS,"Last Seen |"+ new SimpleDateFormat("h:mm:ss a d/M/yy").format(Calendar.getInstance().getTime()));
 
 
     }
