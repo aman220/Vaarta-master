@@ -47,7 +47,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
 
 
         bottomNavigationView  = findViewById(R.id.bottomNavigation);
-//        bottomNavigationView.setSelectedItemId(R.id.menu_search);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -74,36 +73,12 @@ public class UsersActivity extends BaseActivity implements UserListener {
             }
         });
 
-//search user details code not working .
-
-//        EditText search=findViewById(R.id.search);
-//        search.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                if (UserList.size()!=0){
-//                    UsersAdapter.searchNotes(s.toString());
-//                }
-//
-//            }
-//        });
 
         EditText search=findViewById(R.id.search);
         search.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
-//                Toast.makeText(UsersActivity.this, search.getText().toString(), Toast.LENGTH_SHORT).show();
-//                getUsersSearched(search.getText().toString());
 
             }
             @Override
@@ -114,9 +89,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-//                if(s.length() != 0)
-//                    search.setText("");
-//                getUsersSearched("");
                 getUsersSearched(search.getText().toString());
             }
         });
@@ -130,9 +102,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
     }
 
 
-
-
-
     private void getUsersSearched(String s) {
         Loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -140,7 +109,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
                 .get()
                 .addOnCompleteListener(task -> {
                     Loading(false);
-//                    Toast.makeText(this, "now i am here", Toast.LENGTH_SHORT).show();
                     String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<User> users = new ArrayList<>();
@@ -156,13 +124,8 @@ public class UsersActivity extends BaseActivity implements UserListener {
                                 user.id = queryDocumentSnapshot.getId();
                                 users.add(user);
                             }else{
-//                                showErrorMessage();
-//                                getUsersSearched("");
-//                                Toast.makeText(this,"Not found",Toast.LENGTH_SHORT).show();
                             }
-//                            Toast.makeText(this, "that i ma here ", Toast.LENGTH_SHORT).show();
                         }
-//                        Toast.makeText(this, "end i am here", Toast.LENGTH_SHORT).show();
                         if (users.size() > 0 ) {
                             binding.textErrorMessage.setVisibility(View.INVISIBLE);
                             UsersAdapter usersAdapter = new UsersAdapter(users , this);
@@ -170,65 +133,18 @@ public class UsersActivity extends BaseActivity implements UserListener {
                             binding.usersRecycleView.setVisibility(View.VISIBLE);
                         }
                         else {
-//                            Toast.makeText(this, "aman", Toast.LENGTH_SHORT).show();
                             UsersAdapter usersAdapter = new UsersAdapter(users , this);
                             binding.usersRecycleView.setAdapter(usersAdapter);
-//                            binding.usersRecycleView.setVisibility(View.VISIBLE);
                             binding.textErrorMessage.setText(String.format( "%s","No search result found"));
                             binding.textErrorMessage.setVisibility(View.VISIBLE);
                         }
                     }else{
-//                        showErrorMessage();
                         binding.textErrorMessage.setText(String.format( "%s","No User available"));
                         binding.textErrorMessage.setVisibility(View.VISIBLE);
                     }
                 });
     }
 
-
-/*    private void getUsers() {
-        Loading(true);
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(Constants.KEY_COLLECTION_USERS)
-                .get()
-                .addOnCompleteListener(task -> {
-                    Loading(false);
-//                    Toast.makeText(this, "now i am here", Toast.LENGTH_SHORT).show();
-                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        List<User> users = new ArrayList<>();
-                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                            if (currentUserId.equals(queryDocumentSnapshot.getId())) {
-                                continue;
-                            }
-                            User user = new User();
-                            user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
-                            user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
-                            user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
-                            user.token = queryDocumentSnapshot.getString(Constants.KEY_PCM_TOKEN);
-                            user.id=queryDocumentSnapshot.getId();
-                            users.add(user);
-//                            Toast.makeText(this, "that i ma here ", Toast.LENGTH_SHORT).show();
-                        }
-//                        Toast.makeText(this, "end i am here", Toast.LENGTH_SHORT).show();
-                        if (users.size() > 0 ) {
-                            UsersAdapter usersAdapter = new UsersAdapter(users , this);
-                            binding.usersRecycleView.setAdapter(usersAdapter);
-                            binding.usersRecycleView.setVisibility(View.VISIBLE);
-                        }
-                        else {
-//                            Toast.makeText(this, "aman", Toast.LENGTH_SHORT).show();
-                            showErrorMessage();
-                        }
-                    }else{
-                        showErrorMessage();
-                    }
-                });
-    }*/
-//    private void showErrorMessage() {
-//        binding.textErrorMessage.setText(String.format( "%s","No User available"));
-//        binding.textErrorMessage.setVisibility(View.VISIBLE);
-//    }
 
     private void Loading(Boolean isloading) {
         if (isloading) {

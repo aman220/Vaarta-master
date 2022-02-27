@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class UserUpdate extends AppCompatActivity {
     private PreferenceManager preferenceManager;
@@ -52,13 +53,12 @@ public class UserUpdate extends AppCompatActivity {
         binding = ActivityUserUpdateBinding.inflate(getLayoutInflater());
         preferenceManager = new PreferenceManager(getApplicationContext());
         setContentView(binding.getRoot());
-        loadReceiverDetails();
         setListerners();
+        loadReceiverDetails();
 //        getUser();
 
 
         bottomNavigationView  = findViewById(R.id.bottomNavigation);
-//        BottomNavigationView.setSelectedItemId(R.id.menu_account);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -87,10 +87,8 @@ public class UserUpdate extends AppCompatActivity {
 
     }
 
+
     private void loadReceiverDetails(){
-//        Log.d("Mesaggeeeee----", "loadReceiverDetails: succez till now");
-//        String msg = (String) preferenceManager.getString(Constants.KEY_EMAIL) ;
-//        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         receiverUser=(User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textName.setText(preferenceManager.getString(Constants.KEY_NAME));
         binding.bio.setText(preferenceManager.getString(Constants.KEY_BIO));
@@ -99,6 +97,7 @@ public class UserUpdate extends AppCompatActivity {
         binding.inputPassword.setText(preferenceManager.getString(Constants.KEY_PASSWORD));
         byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        encodedImage = encodeImage(bitmap);
         binding.imageProfile.setImageBitmap(bitmap);
     }
 
@@ -153,28 +152,54 @@ public class UserUpdate extends AppCompatActivity {
 
     //update user details in firebase
 
-
     private void UserUpdate (){
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
-            DocumentReference documentReference=
-                database.collection(Constants.KEY_COLLECTION_USERS).document(
-                        preferenceManager.getString(Constants.KEY_USER_ID)
-                );
-        documentReference.update(Constants.KEY_NAME, binding.textName.getText().toString());
-        documentReference.update(Constants.KEY_PHONE, binding.inputphone.getText().toString());
-        documentReference.update(Constants.KEY_EMAIL, binding.textEmail.getText().toString());
-        documentReference.update(Constants.KEY_BIO, binding.bio.getText().toString());
-        documentReference.update(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        documentReference.update(Constants.KEY_IMAGE,preferenceManager.getString(Constants.KEY_IMAGE));
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
 
-        preferenceManager.putString(Constants.KEY_NAME, binding.textName.getText().toString());
-        preferenceManager.putString(Constants.KEY_PHONE, binding.inputphone.getText().toString());
-        preferenceManager.putString(Constants.KEY_BIO, binding.bio.getText().toString());
-        preferenceManager.putString(Constants.KEY_EMAIL, binding.textEmail.getText().toString());
-        preferenceManager.putString(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        preferenceManager.putString(Constants.KEY_IMAGE,encodedImage);
-        Toast.makeText(getApplicationContext(), "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+        HashMap<String, Object> user = new HashMap<>();
+        user.put(Constants.KEY_NAME,binding.textName.getText().toString());
+        user.put(Constants.KEY_EMAIL,binding.textEmail.getText().toString());
+        user.put(Constants.KEY_PHONE,binding.inputphone.getText().toString());
+        user.put(Constants.KEY_BIO,binding.bio.getText().toString());
+        user.put(Constants.KEY_PASSWORD,binding.inputPassword.getText().toString());
+        user.put(Constants.KEY_IMAGE,encodedImage);
+        documentReference.update(user)
+                .addOnSuccessListener(unused -> {
+                    preferenceManager.putString(Constants.KEY_NAME, binding.textName.getText().toString());
+                    preferenceManager.putString(Constants.KEY_EMAIL, binding.textEmail.getText().toString());
+                    preferenceManager.putString(Constants.KEY_PHONE, binding.inputphone.getText().toString());
+                    preferenceManager.putString(Constants.KEY_BIO, binding.bio.getText().toString());
+                    preferenceManager.putString(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
+                    preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+                    Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(exception ->{
+                    Toast.makeText(getApplicationContext(),"Failed to update Profile ",Toast.LENGTH_SHORT).show();
+                });
     }
+
+
+//    private void UserUpdate (){
+//            FirebaseFirestore database = FirebaseFirestore.getInstance();
+//            DocumentReference documentReference=
+//                database.collection(Constants.KEY_COLLECTION_USERS).document(
+//                        preferenceManager.getString(Constants.KEY_USER_ID)
+//                );
+//        documentReference.update(Constants.KEY_NAME, binding.textName.getText().toString());
+//        documentReference.update(Constants.KEY_PHONE, binding.inputphone.getText().toString());
+//        documentReference.update(Constants.KEY_EMAIL, binding.textEmail.getText().toString());
+//        documentReference.update(Constants.KEY_BIO, binding.bio.getText().toString());
+//        documentReference.update(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
+//        documentReference.update(Constants.KEY_IMAGE,preferenceManager.getString(Constants.KEY_IMAGE));
+//
+//        preferenceManager.putString(Constants.KEY_NAME, binding.textName.getText().toString());
+//        preferenceManager.putString(Constants.KEY_PHONE, binding.inputphone.getText().toString());
+//        preferenceManager.putString(Constants.KEY_BIO, binding.bio.getText().toString());
+//        preferenceManager.putString(Constants.KEY_EMAIL, binding.textEmail.getText().toString());
+//        preferenceManager.putString(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
+//        preferenceManager.putString(Constants.KEY_IMAGE,encodedImage);
+//        Toast.makeText(getApplicationContext(), "Profile Update Successfully", Toast.LENGTH_SHORT).show();
+//    }
 
     public void deletedata(){
         FirebaseFirestore database = FirebaseFirestore.getInstance();

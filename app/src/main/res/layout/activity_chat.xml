@@ -15,7 +15,7 @@
         android:layout_marginBottom="@dimen/_16sdp"
         android:background="@drawable/background_content_top"
         app:layout_constraintBottom_toTopOf="@id/layoutSend"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/viewSupporter" />
 
 
     <View
@@ -29,14 +29,15 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
-        android:layout_width="@dimen/_35sdp"
-        android:layout_height="@dimen/_35sdp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginEnd="12dp"
         android:background="@drawable/background_image"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/statusText"
         app:layout_constraintEnd_toStartOf="@id/textName"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.75"
         app:riv_oval="true" />
 
     <androidx.cardview.widget.CardView
@@ -44,7 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:layout_marginStart="20dp"
-        android:visibility="gone"
         android:layout_marginEnd="20dp"
         android:backgroundTint="@color/primary"
         app:cardCornerRadius="20dp"
@@ -60,26 +60,26 @@
             android:layout_gravity="start|center"
             android:layout_marginStart="20dp"
             app:smsp_arrowColor="@color/colorDivider"
-            app:smsp_hint="From Language"
+            app:smsp_hint="Receiver Message"
             app:smsp_hintColor="@color/colorDivider"
             app:smsp_isSearchable="true"
             app:smsp_searchDropdownView="@layout/search_list_item_costome_layout"
             app:smsp_itemListColor="@color/colorBackground"
             app:smsp_itemListHintBackgroundColor="#808080"
-            app:smsp_itemListHintColor="#FFFFFF"
+            app:smsp_itemListHintColor="@color/primary_text"
             app:smsp_multilineError="true"
             app:smsp_searchBackgroundColor="@color/colorDivider"
             app:smsp_searchFilterColor="#FFEB3B"
-            app:smsp_searchTextColor="#000"
-            app:smsp_selectedItemListColor="#7048B6" />
+            app:smsp_searchTextColor="@color/white"
+            app:smsp_selectedItemListColor="@color/white" />
 
         <!--suppress AndroidUnresolvableTag -->
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:background="@drawable/ic_change_camera"
-            android:backgroundTint="@color/colorDivider" />
+            android:backgroundTint="@color/colorTextIcons" />
 
         <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
             android:id="@+id/spinnerToLanguage"
@@ -88,18 +88,18 @@
             android:layout_gravity="end|center"
             android:layout_marginEnd="20dp"
             app:smsp_arrowColor="@color/colorDivider"
-            app:smsp_hint="From Language"
+            app:smsp_hint="sender Language"
             app:smsp_hintColor="@color/colorDivider"
             app:smsp_isSearchable="true"
             app:smsp_searchDropdownView="@layout/search_list_item_costome_layout"
             app:smsp_itemListColor="@color/colorBackground"
             app:smsp_itemListHintBackgroundColor="#808080"
-            app:smsp_itemListHintColor="#FFFFFF"
+            app:smsp_itemListHintColor="@color/colorPrimaryText"
             app:smsp_multilineError="true"
             app:smsp_searchBackgroundColor="@color/colorDivider"
             app:smsp_searchFilterColor="#FFEB3B"
-            app:smsp_searchTextColor="#000"
-            app:smsp_selectedItemListColor="#7048B6" />
+            app:smsp_searchTextColor="@color/white"
+            app:smsp_selectedItemListColor="@color/white" />
     </androidx.cardview.widget.CardView>
 
     <!--    <androidx.appcompat.widget.AppCompatImageView-->
@@ -169,7 +169,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/white"
-        android:textSize="@dimen/_10ssp"
+        android:textStyle="italic"
+        android:textSize="@dimen/_8ssp"
         app:layout_constraintStart_toStartOf="@+id/textName"
         app:layout_constraintTop_toBottomOf="@+id/textName" />
 
@@ -232,6 +233,7 @@
         app:layout_constraintEnd_toEndOf="parent" >
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/msgSend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_4sdp"
@@ -239,28 +241,22 @@
             android:padding="@dimen/_8sdp"
             android:src="@drawable/ic_send"
             android:tint="@color/white" />
+
+<!--        <com.devlomi.record_view.RecordButton-->
+<!--            android:id="@+id/recordbutton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:tint="@color/colorAccent"-->
+<!--            app:mic_icon="@drawable/recv_ic_mic_white" />-->
+
     </FrameLayout>
+
 
     <FrameLayout
-        android:id="@+id/imagePick"
-
-        android:layout_width="@dimen/_14sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginBottom="@dimen/_12sdp"
-        android:background="@drawable/background_chat_input"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/inputMessage" >
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_menu"
-            android:tint="@color/white" />
-    </FrameLayout>
-
-    <EditText
-        android:id="@+id/inputMessage"
+        android:id="@+id/messageLayout"
         android:layout_width="0dp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_16sdp"
@@ -269,16 +265,56 @@
         android:layout_marginRight="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_12sdp"
         android:background="@drawable/background_chat_input"
-        android:hint="@string/type_a_message"
-        android:imeOptions="actionDone"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:paddingStart="@dimen/_16sdp"
-        android:paddingEnd="@dimen/_16sdp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/secondary_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/layoutSend"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+
+
+<!--        <com.devlomi.record_view.RecordView-->
+<!--            android:id="@+id/recordview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_toLeftOf="@id/recordbutton"-->
+<!--            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"-->
+<!--            app:slide_to_cancel_arrow_color="#000000"-->
+<!--            app:slide_to_cancel_bounds="8dp"-->
+<!--            android:visibility="visible"-->
+<!--            app:slide_to_cancel_margin_right="10dp"-->
+<!--            app:slide_to_cancel_text="Slide To Cancel"-->
+<!--            app:counter_time_color="#ff0000" />-->
+
+        <EditText
+            android:layout_gravity="start"
+            android:id="@+id/inputMessage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/background_chat_input"
+            android:hint="@string/type_a_message"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:layout_marginEnd="35dp"
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/secondary_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/layoutSend"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/sendImageBtn"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_attachment"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="645dp" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

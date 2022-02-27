@@ -3,6 +3,7 @@ package com.example.application.adapters;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -20,7 +21,6 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
 
     private final List<ChatMessage> chatMessages;
     private final ConversionListener conversionListener;
-
 
 
     public RecentConversationAdapter(List<ChatMessage> chatMessages,ConversionListener conversionListener) {
@@ -43,8 +43,8 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
     @Override
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
         holder.setData(chatMessages.get(position));
-
     }
+
 
     @Override
     public int getItemCount() {
@@ -57,23 +57,34 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
         ConversionViewHolder(ItemContainerRecentConversionBinding itemContainerRecentConversionBinding){
             super(itemContainerRecentConversionBinding.getRoot());
             binding =itemContainerRecentConversionBinding;
+
+
+
         }
         void setData(ChatMessage chatMessage){
 
             binding.imageProfile.setImageBitmap(getConversionImage(chatMessage.conversionImage));
             binding.textName.setText(chatMessage.conversionName);
             binding.textRecentMessage.setText(chatMessage.message);
+
+
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.id= chatMessage.conversionId;
+                Log.d("RecordView", "User");
                 user.name=chatMessage.conversionName;
                 user.setImage(chatMessage.conversionImage);
                 conversionListener.onConversionClicked(user);
+//                conversionListener.onConversionLongClicked(user,getAdapterPosition());
+
+            });
+
+            binding.getRoot().setOnLongClickListener(v ->{
+                conversionListener.onConversionLongClicked(getAdapterPosition());
+                return false;
             });
         }
     }
-
-
 
 
     private Bitmap getConversionImage(String encodedImage) {

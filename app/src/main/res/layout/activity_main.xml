@@ -15,7 +15,6 @@
         android:layout_height="@dimen/_30sdp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:onClick="goupdate"
         android:background="@drawable/background_icon"
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,13 +42,14 @@
         android:layout_width="@dimen/_180sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_9sdp"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/_14ssp"
         android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/imageProfile"
         app:layout_constraintEnd_toStartOf="@id/imageSignOut"
         app:layout_constraintTop_toTopOf="parent" />
 

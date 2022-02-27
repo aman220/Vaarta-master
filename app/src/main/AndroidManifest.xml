@@ -4,8 +4,8 @@
     package="com.example.application">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -24,14 +24,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Application">
         <activity
-            android:name=".SendImage"
-            android:exported="false" />
-        <activity
-            android:name=".Activity_profile"
-            android:exported="false" />
-        <activity
             android:name=".AddStoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activity_user_profile"
+            android:exported="false" />
+        <activity
+            android:name=".SendImage"
+            android:exported="false" />
+        <activity android:name=".Activity_profile">
+        </activity>
         <activity
             android:name=".camera"
             android:exported="false" />
@@ -46,9 +48,6 @@
             android:name=".activities.IncomingInvitationActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".UserUpdate" />
-        <activity android:name=".OtpSendActivity" />
-        <activity android:name=".OtpVerifyActivity" />
-        <activity android:name=".Activity_user_profile" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>

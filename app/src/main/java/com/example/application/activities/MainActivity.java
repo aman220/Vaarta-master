@@ -1,6 +1,7 @@
 package com.example.application.activities;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,9 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.application.Activity_profile;
+import com.example.application.Activity_user_profile;
 import com.example.application.ChatActivity;
 import com.example.application.R;
-import com.example.application.UserUpdate;
 import com.example.application.adapters.RecentConversationAdapter;
 import com.example.application.camera;
 import com.example.application.databinding.ActivityMainBinding;
@@ -28,6 +29,8 @@ import com.example.application.models.ChatMessage;
 import com.example.application.models.User;
 import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -71,9 +74,9 @@ public class MainActivity extends BaseActivity implements ConversionListener
         checkForBatteryOptimization();
 
 
+
         bottomNavigationView  = findViewById(R.id.bottomNavigation);
 
-//        bottomNavigationView.setSelectedItemId(R.id.menu_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -103,25 +106,27 @@ public class MainActivity extends BaseActivity implements ConversionListener
 
     private  void init(){
         conversations = new ArrayList<>();
-        conversationsAdapter = new RecentConversationAdapter(conversations,this);
+        conversationsAdapter = new RecentConversationAdapter(
+                conversations,this);
         binding.conversationRecycleView.setAdapter(conversationsAdapter);
         database = FirebaseFirestore.getInstance();
+        conversationsAdapter.notifyDataSetChanged();
     }
 
 
-
-
-
-
-
-
-    public void goupdate(View view){
-        Intent i = new Intent(this, UserUpdate.class);
-        startActivity(i);
+    public void goProfile(){
+        Intent intent=new Intent(MainActivity.this, Activity_user_profile.class);
+        Bundle extras = new Bundle();
+        extras.putString("token",preferenceManager.getString(Constants.KEY_PCM_TOKEN));
+        extras.putString("userType","self");
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private void setListerners(){
         binding.imageSignOut.setOnClickListener(v -> signout());
+        binding.imageProfile.setOnClickListener(v -> goProfile());
+
     }
 
 
@@ -149,7 +154,6 @@ public class MainActivity extends BaseActivity implements ConversionListener
                         preferenceManager.getString(Constants.KEY_USER_ID)
                 );
         documentReference.update(Constants.KEY_PCM_TOKEN , token)
-//                .addOnSuccessListener(unused -> showToast("Token Update successfully"))
                 .addOnFailureListener(e ->showToast("unable to update token"));
     }
 
@@ -172,10 +176,44 @@ public class MainActivity extends BaseActivity implements ConversionListener
 
     @Override
     public void onConversionClicked(User user) {
+        Toast.makeText(this, "conversationid", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER,user);
         startActivity(intent);
     }
+
+    public void onConversionLongClicked(int position){
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Waring")
+                .setMessage("Are you Sure You want to Delete This  Chat")
+                .setPositiveButton("ok", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Bundle data = getIntent().getExtras();
+//                        String conversionId = data.getString("conversionId");
+                        FirebaseFirestore database = FirebaseFirestore.getInstance();
+                        DocumentReference documentReference =
+                                database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document();
+                        documentReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    conversations.remove(position);
+                                    conversationsAdapter.notifyItemRemoved(position);
+                                    dialog.dismiss();
+                                }else
+                                    Toast.makeText(MainActivity.this, "Unable To Delete", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).setNegativeButton("Cancel", null)
+                .show();
+        }
+
+
+
+
 
     private void listenConversation(){
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
@@ -185,10 +223,6 @@ public class MainActivity extends BaseActivity implements ConversionListener
                 .whereEqualTo(Constants.KEY_RECEIVER_ID,preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(eventListener);
     }
-
-
-
-
 
 
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
@@ -215,6 +249,7 @@ public class MainActivity extends BaseActivity implements ConversionListener
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_LAST_MESSAGE);
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
                     conversations.add(chatMessage);
+                    conversationsAdapter.notifyDataSetChanged();
                 }else if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
                     for (int i = 0; i < conversations.size(); i++) {
                         String senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);

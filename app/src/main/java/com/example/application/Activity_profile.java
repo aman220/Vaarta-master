@@ -42,7 +42,6 @@ public class Activity_profile extends AppCompatActivity {
 
 
         bottomNavigationView  = findViewById(R.id.bottomNavigation);
-//        BottomNavigationView.setSelectedItemId(R.id.menu_account);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

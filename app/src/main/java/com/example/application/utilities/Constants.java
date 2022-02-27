@@ -20,7 +20,6 @@ public class Constants {
     public static final String KEY_RECEIVER_ID="receiverId";
     public static final String KEY_RECEIVER_TOKEN="receiverToken";
     public static final String KEY_MESSAGE ="message";
-    public static final String KEY_CHAT_IMAGE ="aImage";
     public static final String KEY_TIMESTAMP="timestamp";
     public static final String KEY_COLLECTION_CONVERSATIONS="conversations";
     public static final String KEY_SENDER_NAME="senderName";
@@ -30,12 +29,17 @@ public class Constants {
     public static final String KEY_LAST_MESSAGE="lastMessage";
     public static final String KEY_AVAILABILITY="availability";
     public static final String KEY_USER_STATUS="status";
+    public static final String KEY_CONVERSATION_ID="conversationId";
+
+
+    static int RECORDING_REQUEST_CODE = 3000;
 
     public static final String FROM_LANGUAGE="from";
     public static final String TO_LANGUAGE="to";
 
     public static final String FROM_LANGUAGE_CODE = "0";
     public static final String TO_LANGUAGE_CODE = "0";
+
 
 
 
@@ -59,6 +63,9 @@ public class Constants {
     public static final String REMOTE_MSG_INVITATION_CANCELLED = "cancelled";
 
     public static final String REMOTE_MSG_MEETING_ROOM = "meetingRoom";
+
+    public static final String IMAGE_URL = "imageUrl";
+    public static final String MEDIA_TYPE = "type";
 
     public static HashMap<String,String> remoteMsgHeaders=null;
     public static HashMap<String, String> getRemoteMsgHeaders() {
