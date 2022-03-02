@@ -1,13 +1,20 @@
 package com.example.application;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +27,7 @@ import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.jsibbold.zoomage.ZoomageView;
 
 public class Activity_profile extends AppCompatActivity {
 
@@ -79,6 +87,26 @@ public class Activity_profile extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void fullScreenImagePopup(Context thisContext, Bitmap imageBitmap){
+        Dialog builder = new Dialog(thisContext);
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+            }
+        });
+        ZoomageView imageView = new ZoomageView(thisContext);
+        imageView.setImageBitmap(imageBitmap);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setCropToPadding(true);
+        builder.show();
+    }
+
     private void loadReceiverDetails(){
         receiverUser=(User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textUsername.setText(preferenceManager.getString(Constants.KEY_NAME));
@@ -89,6 +117,7 @@ public class Activity_profile extends AppCompatActivity {
         byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         binding.imageProfile.setImageBitmap(bitmap);
+        binding.imageProfile.setOnClickListener(v -> fullScreenImagePopup(this, bitmap));
     }
     protected void onResume() {
         super.onResume();

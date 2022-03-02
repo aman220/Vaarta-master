@@ -1,13 +1,20 @@
 package com.example.application;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,6 +24,7 @@ import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.jsibbold.zoomage.ZoomageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +32,11 @@ import java.util.List;
 public class Activity_user_profile extends AppCompatActivity {
 
     private PreferenceManager preferenceManager;
+    private User receiverUser;
+    private String encodedImage;
     private ActivityUserProfileBinding binding;
+    private FirebaseFirestore db;
+    private Button updatebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +44,10 @@ public class Activity_user_profile extends AppCompatActivity {
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
         preferenceManager = new PreferenceManager(getApplicationContext());
         setContentView(binding.getRoot());
+        setListerners();
         binding.progressBar.setVisibility(View.VISIBLE);
         Bundle extras = getIntent().getExtras();
         String user = extras.getString("userType");
-//        Toast.makeText(this, user, Toast.LENGTH_SHORT).show();
         loadingCurtain();
         if(user.equals("self")){
             getUsersSearched(extras.getString("token"));
@@ -61,6 +73,11 @@ public class Activity_user_profile extends AppCompatActivity {
         }, 100);
     }
 
+    private void setListerners(){
+
+        binding.editprofile.setOnClickListener(v -> goEdit());
+    }
+
     private void goEdit() {
         Intent i = new Intent (this, UserUpdate.class);
         startActivity(i);
@@ -82,6 +99,7 @@ public class Activity_user_profile extends AppCompatActivity {
                             byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.imageProfile.setImageBitmap(bitmap);
+                            binding.imageProfile.setOnClickListener(v -> fullScreenImagePopup(this, bitmap));
                         }
                         else{
                             for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
@@ -93,15 +111,37 @@ public class Activity_user_profile extends AppCompatActivity {
                                     byte[] bytes = Base64.decode(queryDocumentSnapshot.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                     binding.imageProfile.setImageBitmap(bitmap);
+                                    binding.imageProfile.setOnClickListener(v -> fullScreenImagePopup(this, bitmap));
+
                                 }
                             }
                         }
                     }else{
-                        Toast.makeText(this, "Error Loading Profile ", Toast.LENGTH_SHORT).show();
+//
                     }
                 });
     }
 
+
+    private void fullScreenImagePopup(Context thisContext, Bitmap imageBitmap){
+        Dialog builder = new Dialog(thisContext);
+        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        builder.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+            }
+        });
+        ZoomageView imageView = new ZoomageView(thisContext);
+        imageView.setImageBitmap(imageBitmap);
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        imageView.setCropToPadding(true);
+        builder.show();
+    }
     private void Loading(Boolean isloading) {
         if (isloading) {
             binding.progressBar.setVisibility(View.VISIBLE);

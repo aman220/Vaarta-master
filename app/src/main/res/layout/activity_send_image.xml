@@ -47,26 +47,25 @@
         android:layout_width="match_parent"
         android:layout_height="300dp" />
 
-    <FrameLayout
-        android:id="@+id/imageSend"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_40sdp"
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/fabProgressCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:arcColor="#00ffff"
+        app:arcWidth="7dp"
         android:background="@drawable/background_chat_input"
-        app:layout_constraintEnd_toEndOf="@id/imgView"
-        app:layout_constraintBottom_toBottomOf="@id/imgView">
+        app:finalIcon="@drawable/ic_send"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/sendImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_marginLeft="@dimen/_4sdp"
             android:padding="@dimen/_8sdp"
-            android:src="@drawable/ic_send"
+            android:src="@drawable/ic_poster"
             android:tint="@color/white" />
-    </FrameLayout>
+
+    </com.github.jorgecastilloprz.FABProgressCircle>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

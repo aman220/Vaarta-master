@@ -19,12 +19,15 @@ import androidx.annotation.Nullable;
 
 import com.example.application.Activity_profile;
 import com.example.application.Activity_user_profile;
+import com.example.application.AddStoryActivity;
 import com.example.application.ChatActivity;
 import com.example.application.R;
 import com.example.application.adapters.RecentConversationAdapter;
+import com.example.application.adapters.StoryAdapter;
 import com.example.application.camera;
 import com.example.application.databinding.ActivityMainBinding;
 import com.example.application.listeners.ConversionListener;
+import com.example.application.listeners.UserListener;
 import com.example.application.models.ChatMessage;
 import com.example.application.models.User;
 import com.example.application.utilities.Constants;
@@ -37,6 +40,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -46,13 +50,11 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends BaseActivity implements ConversionListener
-{
+public class MainActivity extends BaseActivity implements ConversionListener , UserListener {
     private ActivityMainBinding binding;
     private PreferenceManager preferenceManager;
-    private int REQUEST_CODE_BATTERY_OPTIMIZATIONS=1;
-
-
+    private int REQUEST_CODE_BATTERY_OPTIMIZATIONS = 1;
+    private StoryAdapter StoryAdapter;
     private List<ChatMessage> conversations;
     private RecentConversationAdapter conversationsAdapter;
     private FirebaseFirestore database;
@@ -70,12 +72,12 @@ public class MainActivity extends BaseActivity implements ConversionListener
         getToken();
         init();
         setListerners();
+        getUsersSearched("");
         listenConversation();
         checkForBatteryOptimization();
 
 
-
-        bottomNavigationView  = findViewById(R.id.bottomNavigation);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -104,26 +106,26 @@ public class MainActivity extends BaseActivity implements ConversionListener
         });
     }
 
-    private  void init(){
+    private void init() {
         conversations = new ArrayList<>();
         conversationsAdapter = new RecentConversationAdapter(
-                conversations,this);
+                conversations, this);
         binding.conversationRecycleView.setAdapter(conversationsAdapter);
         database = FirebaseFirestore.getInstance();
         conversationsAdapter.notifyDataSetChanged();
     }
 
 
-    public void goProfile(){
-        Intent intent=new Intent(MainActivity.this, Activity_user_profile.class);
+    public void goProfile() {
+        Intent intent = new Intent(MainActivity.this, Activity_user_profile.class);
         Bundle extras = new Bundle();
-        extras.putString("token",preferenceManager.getString(Constants.KEY_PCM_TOKEN));
-        extras.putString("userType","self");
+        extras.putString("token", preferenceManager.getString(Constants.KEY_PCM_TOKEN));
+        extras.putString("userType", "self");
         intent.putExtras(extras);
         startActivity(intent);
     }
 
-    private void setListerners(){
+    private void setListerners() {
         binding.imageSignOut.setOnClickListener(v -> signout());
         binding.imageProfile.setOnClickListener(v -> goProfile());
 
@@ -139,34 +141,34 @@ public class MainActivity extends BaseActivity implements ConversionListener
 
     private void showToast(String meassage) {
 
-    Toast.makeText(getApplicationContext(),meassage,Toast.LENGTH_SHORT).show();
-}
+        Toast.makeText(getApplicationContext(), meassage, Toast.LENGTH_SHORT).show();
+    }
 
-    private void getToken(){
+    private void getToken() {
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this::updateToken);
     }
 
-    private void updateToken(String token){
-        preferenceManager.putString(Constants.KEY_PCM_TOKEN,token);
+    private void updateToken(String token) {
+        preferenceManager.putString(Constants.KEY_PCM_TOKEN, token);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference=
+        DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_USERS).document(
                         preferenceManager.getString(Constants.KEY_USER_ID)
                 );
-        documentReference.update(Constants.KEY_PCM_TOKEN , token)
-                .addOnFailureListener(e ->showToast("unable to update token"));
+        documentReference.update(Constants.KEY_PCM_TOKEN, token)
+                .addOnFailureListener(e -> showToast("unable to update token"));
     }
 
-    private void signout(){
+    private void signout() {
         showToast("Signing out...");
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_USERS).document(
                         preferenceManager.getString(Constants.KEY_USER_ID));
-        HashMap<String,Object> updates = new HashMap<>();
+        HashMap<String, Object> updates = new HashMap<>();
         updates.put(Constants.KEY_PCM_TOKEN, FieldValue.delete());
         documentReference.update(updates)
-                .addOnSuccessListener(unused->{
+                .addOnSuccessListener(unused -> {
                     preferenceManager.clear();
                     startActivity(new Intent(getApplicationContext(), login.class));
                     finish();
@@ -177,21 +179,18 @@ public class MainActivity extends BaseActivity implements ConversionListener
     @Override
     public void onConversionClicked(User user) {
         Toast.makeText(this, "conversationid", Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(getApplicationContext(), ChatActivity.class);
-        intent.putExtra(Constants.KEY_USER,user);
+        Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
     }
 
-    public void onConversionLongClicked(int position){
+    public void onConversionLongClicked(int position) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Waring")
                 .setMessage("Are you Sure You want to Delete This  Chat")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Bundle data = getIntent().getExtras();
-//                        String conversionId = data.getString("conversionId");
                         FirebaseFirestore database = FirebaseFirestore.getInstance();
                         DocumentReference documentReference =
                                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document();
@@ -202,18 +201,14 @@ public class MainActivity extends BaseActivity implements ConversionListener
                                     conversations.remove(position);
                                     conversationsAdapter.notifyItemRemoved(position);
                                     dialog.dismiss();
-                                }else
+                                } else
                                     Toast.makeText(MainActivity.this, "Unable To Delete", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }).setNegativeButton("Cancel", null)
                 .show();
-        }
-
-
-
-
+    }
 
     private void listenConversation(){
         database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
@@ -298,53 +293,87 @@ public class MainActivity extends BaseActivity implements ConversionListener
         super.onResume();
         bottomNavigationView.setSelectedItemId(R.id.menu_home);
     }
+
+
+
+    private void getUsersSearched(String s) {
+        Loading(true);
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .get()
+                .addOnCompleteListener(task -> {
+                    Loading(false);
+                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            if (currentUserId.equals(queryDocumentSnapshot.getId())) {
+                                continue;
+                            }else if(queryDocumentSnapshot.getString(Constants.KEY_NAME).toLowerCase().contains(s.toLowerCase())) {
+                                User user = new User();
+                                user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
+                                user.setImage(queryDocumentSnapshot.getString(Constants.KEY_IMAGE));
+                                user.token = queryDocumentSnapshot.getString(Constants.KEY_PCM_TOKEN);
+                                user.id = queryDocumentSnapshot.getId();
+                                users.add(user);
+                            }else{
+                            }
+                        }
+                        if (users.size() > 0 ) {
+                            binding.textErrorMessage.setVisibility(View.INVISIBLE);
+                            StoryAdapter storyAdapter = new StoryAdapter(users , this);
+                            binding.usersRecycleView.setAdapter(storyAdapter);
+                            binding.usersRecycleView.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            StoryAdapter storyAdapter = new StoryAdapter(users , this);
+                            binding.usersRecycleView.setAdapter(storyAdapter);
+                            binding.textErrorMessage.setText(String.format( "%s","No search result found"));
+                            binding.textErrorMessage.setVisibility(View.VISIBLE);
+                        }
+                    }else{
+                        binding.textErrorMessage.setText(String.format( "%s","No User available"));
+                        binding.textErrorMessage.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+
+    private void Loading(Boolean isloading) {
+        if (isloading) {
+            binding.progressBar2.setVisibility(View.VISIBLE);
+        } else {
+            binding.progressBar2.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onUserClicked(User user) {
+        Intent intent= new Intent(getApplicationContext(), AddStoryActivity.class);
+        intent.putExtra(Constants.KEY_USER,user);
+        startActivity(intent);
+        finish();
+    }
+
+    public void onUserClicked2(User user) {
+        Intent intent= new Intent(getApplicationContext(), ChatActivity.class);
+        intent.putExtra(Constants.KEY_USER,user);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void initiateVideoMeeting(User user) {
+
+    }
+
+    @Override
+    public void initiateAudioMeeting(User user) {
+
+    }
+
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//package com.example.application;
-//
-//import android.os.Bundle;
-//import android.view.MenuItem;
-//import android.view.View;
-//import android.widget.Toast;
-//import android.content.Intent;
-//
-//import androidx.annotation.NonNull;
-//import androidx.appcompat.app.AppCompatActivity;
-//
-//import com.google.android.material.bottomnavigation.BottomNavigationView;
-//
-//public class MainActivity extends AppCompatActivity
-//{
-//    BottomNavigationView bnv;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        bnv=(BottomNavigationView)findViewById(R.id.bottomNavigation);
-//        bnv.setOnNavigationItemSelectedListener();
-//    }
-//}

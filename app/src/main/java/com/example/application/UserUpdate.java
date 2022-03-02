@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -102,7 +103,7 @@ public class UserUpdate extends AppCompatActivity {
     }
 
     public void goprofile(View view){
-        Intent i = new Intent(this, OtpSendActivity.class);
+        Intent i = new Intent(this, AddStoryActivity.class);
         startActivity(i);
     }
 
@@ -116,7 +117,7 @@ public class UserUpdate extends AppCompatActivity {
                             InputStream inputStream = getContentResolver().openInputStream(imageUri);
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             binding.imageProfile.setImageBitmap(bitmap);
-                            binding.textAdd.setVisibility(View.GONE);
+//                            binding.textAdd.setVisibility(View.GONE);
                             encodedImage = encodeImage(bitmap);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
@@ -127,13 +128,37 @@ public class UserUpdate extends AppCompatActivity {
     );
 
     private String encodeImage (Bitmap bitmap){
-        int previewWidth = 150;
-        int previewHeight= bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
+//		int previewWidth = bitmap.getWidth() < 500 ? 600 : bitmap.getWidth();
+        int size = 800;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        Bitmap previewBitmap = getResizedBitmap(bitmap, size);
+        do {
+            previewBitmap = getResizedBitmap(bitmap, size);
+            int quality = 0;
+            do {
+                previewBitmap.compress(Bitmap.CompressFormat.PNG, quality, byteArrayOutputStream);
+                quality += 10;
+                Log.d("UserUpdate", "Quality: " + quality);
+                Log.d("UserUpdate", "Size: " + byteArrayOutputStream.toByteArray().length);
+            } while (byteArrayOutputStream.size() > 1040000 && quality < 100);
+            size -= 50;
+        }while (byteArrayOutputStream.size() > 1040000);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     private void setListerners() {

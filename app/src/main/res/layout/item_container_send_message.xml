@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/_4sdp"
     android:layout_marginTop="@dimen/_8sdp">
 
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/selectView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:src="#699f"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="5dp" />
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
@@ -48,6 +58,19 @@
                 android:textSize="@dimen/_13ssp"
                 android:visibility="gone" />
 
+            <!--<com.jsibbold.zoomage.ZoomageView
+                android:id="@+id/imageMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="12dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_noun_broken_image"
+                android:contentDescription="media image"
+                android:maxWidth="215dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>-->
             <ImageView
                 android:id="@+id/imageMessage"
                 android:layout_width="wrap_content"
@@ -58,8 +81,6 @@
                 android:src="@drawable/ic_noun_broken_image"
                 android:contentDescription="media image"
                 android:maxWidth="215dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_13ssp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -77,7 +77,7 @@ public class login extends AppCompatActivity {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
-                .whereEqualTo(Constants.KEY_EMAIL, binding.inputEmail.getText().toString())
+                .whereEqualTo(Constants.KEY_EMAIL, binding.inputEmail.getText().toString().trim())
                 .whereEqualTo(Constants.KEY_PASSWORD, binding.inputpassword.getText().toString())
                 .get()
                 .addOnCompleteListener(task -> {
@@ -118,7 +118,7 @@ public class login extends AppCompatActivity {
         if(binding.inputEmail.getText().toString().trim().isEmpty()) {
             showToast("Enter email");
             return false;
-        }else if(!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText().toString()).matches()){
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText().toString().trim()).matches()){
             showToast("Enter valid email");
             return false;
         }else if(binding.inputpassword.getText().toString().trim().isEmpty()){

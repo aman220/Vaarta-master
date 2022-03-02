@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -9,16 +10,16 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/storyOutline"
         android:layout_gravity="center"
-        app:cardBackgroundColor="@color/primary"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        app:cardCornerRadius="27dp">
+        app:cardBackgroundColor="@color/primary_dark"
+        android:layout_width="78dp"
+        android:layout_height="78dp"
+        app:cardCornerRadius="32dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
-            app:cardCornerRadius="25dp">
+            app:cardCornerRadius="32dp">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:layout_width="match_parent"
@@ -35,6 +36,8 @@
         android:layout_width="80dp"
         android:layout_height="20dp"
         android:ellipsize="end"
+        android:layout_marginTop="@dimen/_4ssp"
+        android:textAlignment="center"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="@dimen/_10ssp"/>

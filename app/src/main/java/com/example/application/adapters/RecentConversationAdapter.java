@@ -3,7 +3,6 @@ package com.example.application.adapters;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -71,11 +70,9 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
             binding.getRoot().setOnClickListener(v -> {
                 User user = new User();
                 user.id= chatMessage.conversionId;
-                Log.d("RecordView", "User");
                 user.name=chatMessage.conversionName;
                 user.setImage(chatMessage.conversionImage);
                 conversionListener.onConversionClicked(user);
-//                conversionListener.onConversionLongClicked(user,getAdapterPosition());
 
             });
 

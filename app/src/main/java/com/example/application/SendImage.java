@@ -7,20 +7,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.application.databinding.ActivityChatBinding;
 import com.example.application.databinding.ActivitySendImageBinding;
-import com.example.application.models.User;
 import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -28,7 +30,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -37,13 +38,14 @@ public class SendImage extends AppCompatActivity {
 
 
     private ActivitySendImageBinding binding;
-    private PreferenceManager preferenceManager;
-    private Uri filePath;
-    private User receiver;
     private ActivityChatBinding chat;
+    private PreferenceManager preferenceManager;
+    private Button btnupload;
+    private Uri filePath;
+    private String fileName;
     FirebaseStorage storage;
     StorageReference storageReference;
-
+    private Snackbar snackbar;
     private final int PICK_IMAGE_REQUEST = 22;
 
     @Override
@@ -62,7 +64,7 @@ public class SendImage extends AppCompatActivity {
             }
         });
 
-        binding.sendImage.setOnClickListener(new View.OnClickListener() {
+        binding.fabProgressCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UploadImage();
@@ -92,40 +94,44 @@ public class SendImage extends AppCompatActivity {
                 && data != null
                 && data.getData() != null) {
             filePath = data.getData();
+            fileName = data.getData().getLastPathSegment();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),filePath);
-                binding.imgView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Glide.with(binding.getRoot().getContext())
+                        .load(filePath)
+                        .into(binding.imgView);
+            } catch (Exception e) {
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                    binding.imgView.setImageBitmap(bitmap);
+                }catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }
 
-    private void UploadImage() {
-        Toast.makeText(this, "haa pahuch rha hai", Toast.LENGTH_SHORT).show();
-        if (filePath != null) {
+    private void UploadImage(){
+
+        if(filePath != null)
+        {
             FirebaseFirestore database = FirebaseFirestore.getInstance();
-            DocumentReference documentReference =
+            DocumentReference documentReference=
                     database.collection(Constants.KEY_COLLECTION_USERS).document(
                             preferenceManager.getString(Constants.KEY_USER_ID)
                     );
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
-
+            Snackbar snack = Snackbar.make(binding.getRoot(), "Uploading...", Snackbar.LENGTH_INDEFINITE);
+            snack.show();
+            binding.fabProgressCircle.show();
             Bundle data = getIntent().getExtras();
             String receiverId = data.getString("receiverId");
-            String receiverName = data.getString("receiverName");
-            String receiverImage = data.getString("receiverImage");
-            String token = data.getString("token");
-            String conversionId = data.getString("conversionId");
-            StorageReference ref = storageReference.child("images/" + documentReference.toString());
+            StorageReference ref = storageReference.child("chats/media/images/"+ fileName);
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
                     ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-
+                        @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             String profileImageUrl=task.getResult().toString();
                             PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
@@ -133,7 +139,7 @@ public class SendImage extends AppCompatActivity {
                             Toast.makeText(SendImage.this,profileImageUrl ,Toast.LENGTH_LONG).show();
                             HashMap<String, Object> message = new HashMap<>();
                             message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-                            message.put(Constants.KEY_RECEIVER_ID,receiverId);
+                            message.put(Constants.KEY_RECEIVER_ID, receiverId);
                             message.put(Constants.KEY_MESSAGE, "");
                             message.put(Constants.IMAGE_URL, profileImageUrl);
                             message.put(Constants.MEDIA_TYPE,"image");
@@ -143,26 +149,65 @@ public class SendImage extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                    Toast.makeText(SendImage.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                }
+                    binding.fabProgressCircle.beginFinalAnimation();
+                    binding.fabProgressCircle.hide();
+                    snack.dismiss();
+                    Snackbar.make(binding.fabProgressCircle, "Cloud_upload_complete", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null)
+                            .show();
 
+                }
             })
+
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(SendImage.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            binding.fabProgressCircle.beginFinalAnimation();
+                            binding.fabProgressCircle.hide();
+                            snack.dismiss();
+                            Toast.makeText(SendImage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                            snack.setText("Uploading "+getSize(taskSnapshot.getBytesTransferred())
+                                    +"/"+ getSize(taskSnapshot.getTotalByteCount())
+                                    +"\t"+progress+"%");
                         }
                     });
         }
+
+    }
+    public static String getSize(long size) {
+        long kilo = 1024;
+        long mega = kilo * kilo;
+        long giga = mega * kilo;
+        long tera = giga * kilo;
+        String s = "";
+        double kb = (double)size / kilo;
+        double mb = kb / kilo;
+        double gb = mb / kilo;
+        double tb = gb / kilo;
+        if(size < kilo) {
+            s = size + " Bytes";
+        } else if(size >= kilo && size < mega) {
+            s =  String.format("%.2f", kb) + " KB";
+        } else if(size >= mega && size < giga) {
+            s = String.format("%.2f", mb) + " MB";
+        } else if(size >= giga && size < tera) {
+            s = String.format("%.2f", gb) + " GB";
+        } else if(size >= tera) {
+            s = String.format("%.2f", tb) + " TB";
+        }
+        return s;
+    }
+    private void setListerners(){
+
+//        binding.imageSend.setOnClickListener(v -> sendMessage());
     }
 
 

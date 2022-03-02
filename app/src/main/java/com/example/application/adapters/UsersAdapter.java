@@ -84,37 +84,5 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
     }
 
-//search user datils code (not working)
-
-//    public void searchNotes(final String searchKeyword){
-//        timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                if(searchKeyword.trim().isEmpty()){
-//                    user=usersSource;
-//                }else {
-//                    ArrayList<User> temp = new ArrayList<>();
-//                    for (User user : usersSource){
-//                        if (user.getName().toLowerCase().contains(searchKeyword.toLowerCase()){
-//                            temp.add(user);
-//                        }
-//                    }
-//                    user = temp;
-//                }
-//                new Handler(Looper.getMainLooper()).post(new Runnable(){
-//                    @Override
-//                    public void run(){
-//                        notifyDataSetChanged();
-//                    }
-//                });
-//            }
-//        },500);
-//    }
-//    public  void cancelTimer(){
-//        if (timer!=null){
-//            timer.cancel();
-//        }
-//    }
 }
 

@@ -165,6 +165,12 @@ public class UsersActivity extends BaseActivity implements UserListener {
     }
 
     @Override
+    public void onUserClicked2(User user) {
+
+    }
+
+
+    @Override
     public void initiateVideoMeeting(User user) {
         if (user.token==null || user.token.trim().isEmpty()){
             Toast.makeText(

@@ -53,44 +53,54 @@
         app:layout_constraintEnd_toStartOf="@id/imageSignOut"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/usersRecycleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:padding="@dimen/_20sdp"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/layout"/>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/usersRecycleView"
+        app:layout_constraintEnd_toEndOf="@id/usersRecycleView"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="@id/usersRecycleView"
+        app:layout_constraintTop_toTopOf="@id/usersRecycleView"
+        app:layout_constraintVertical_bias="0.35" />
+
+    <TextView
+        android:id="@+id/textErrorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/error"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/usersRecycleView"
+        app:layout_constraintTop_toTopOf="@id/usersRecycleView" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_80sdp"
+        android:id="@+id/layout"
+        android:layout_marginTop="@dimen/_90sdp"
         android:background="@drawable/background_constant_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageProfile">
-
-
-<!--        <View-->
-<!--            android:id="@+id/viewDivider"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="2dp"-->
-<!--            android:layout_marginTop="@dimen/_55sdp"-->
-<!--            android:background="@color/colorDivider"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent">-->
-<!--        </View>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="70dp"-->
-<!--            android:orientation="vertical"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginLeft="15dp"-->
-<!--            android:layout_marginRight="@dimen/_24sdp">-->
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content">-->
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/storiesBar"/>-->
-<!--        </androidx.core.widget.NestedScrollView>-->
-<!--        </LinearLayout>-->
-
-
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -103,8 +113,7 @@
             android:overScrollMode="never"
             android:visibility="gone"
             android:padding="@dimen/_20sdp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
             android:layout_width="@dimen/_25sdp"
