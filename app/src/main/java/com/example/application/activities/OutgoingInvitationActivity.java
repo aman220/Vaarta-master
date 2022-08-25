@@ -54,13 +54,11 @@ public class OutgoingInvitationActivity extends AppCompatActivity {
 
         if (meetingType != null) {
             if (meetingType.equals("video")) {
-                imageMeetingType.setImageResource(R.drawable.ic_video);
+                imageMeetingType.setImageResource(R.drawable.ic_videoajdf);
             }else {
                 imageMeetingType.setImageResource(R.drawable.ic_audio);
             }
         }
-
-
 
 
         TextView textFirstChar = findViewById(R.id.textFirstChar);

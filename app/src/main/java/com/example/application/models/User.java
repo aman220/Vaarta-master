@@ -10,6 +10,7 @@ public class User implements Serializable {
     public String id;
     public String status;
     public String availablity;
+    public String time;
 
 
     public String getImage() {

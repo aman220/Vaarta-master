@@ -58,19 +58,32 @@
                 android:textSize="@dimen/_13ssp"
                 android:visibility="gone" />
 
-            <!--<com.jsibbold.zoomage.ZoomageView
-                android:id="@+id/imageMessage"
+            <me.mutasem.simplevoiceplayer.PlayerView
+                android:id="@+id/audioMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:layout_marginTop="12dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/ic_noun_broken_image"
-                android:contentDescription="media image"
-                android:maxWidth="215dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>-->
+                app:layout_constraintTop_toTopOf="parent">
+            </me.mutasem.simplevoiceplayer.PlayerView>
+
+
+
+            <VideoView
+                android:id="@+id/videoMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="@dimen/_12sdp"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                android:contentDescription="media Video"
+                android:maxWidth="215dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </VideoView>
+
             <ImageView
                 android:id="@+id/imageMessage"
                 android:layout_width="wrap_content"

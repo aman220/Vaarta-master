@@ -4,7 +4,7 @@ import com.example.application.models.User;
 
 public interface UserListener {
     void onUserClicked(User user);
-    void onUserClicked2(User user);
+//    void onUserClicked2(User user);
     void initiateVideoMeeting(User user);
     void initiateAudioMeeting(User user);
 }

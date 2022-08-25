@@ -61,7 +61,7 @@
             android:hint="@string/search_user"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:textColorHint="@color/secondary_text"
             android:paddingStart="@dimen/_16sdp"
             android:paddingEnd="@dimen/_16sdp"
@@ -69,15 +69,29 @@
             android:textSize="@dimen/_13ssp">
         </EditText>
 
-<!--        <androidx.appcompat.widget.AppCompatImageView-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="55dp"-->
-<!--            android:layout_marginStart="@dimen/_240sdp"-->
-<!--            android:layout_marginTop="@dimen/_5sdp"-->
-<!--            android:background="@drawable/background_chat_input"-->
-<!--            android:padding="@dimen/_8sdp"-->
-<!--            android:tint="@color/white"-->
-<!--            android:src="@drawable/ic_search" />-->
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+                <include layout="@layout/item_container_users_skeleton" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -93,11 +107,11 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />
 
-        <ProgressBar
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center"/>
+<!--        <ProgressBar-->
+<!--            android:layout_width="@dimen/_25sdp"-->
+<!--            android:layout_height="@dimen/_25sdp"-->
+<!--            android:id="@+id/progressBar"-->
+<!--            android:layout_gravity="center"/>-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

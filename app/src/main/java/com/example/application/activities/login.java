@@ -28,36 +28,6 @@ public class login extends AppCompatActivity {
         binding = LoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setListerners();
-
-
-        //Hear is the bottom navigation view of this activity
-//        BottomNavigationView BottomNavigationView = findViewById(R.id.bottomNavigation);
-//        BottomNavigationView.setSelectedItemId(R.id.menu_account);
-//        BottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    case R.id.menu_search:
-//                        startActivity(new Intent(getApplicationContext()
-//                                , UsersActivity.class));
-//                        overridePendingTransition(0, 0);
-//                        return true;
-//                    case R.id.menu_account:
-//                        return true;
-//                    case R.id.menu_music:
-//                        startActivity(new Intent(getApplicationContext()
-//                                , camera.class));
-//                        overridePendingTransition(0, 0);
-//                        return true;
-//                    case R.id.menu_home:
-//                        startActivity(new Intent(getApplicationContext()
-//                                , MainActivity.class));
-//                        overridePendingTransition(0, 0);
-//                        return true;
-//                }
-//                return false;
-//            }
-//        });
     }
 
 

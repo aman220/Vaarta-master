@@ -1,6 +1,6 @@
 package com.example.application.utilities;
 
-import android.content.Context;
+import  android.content.Context;
 import android.content.SharedPreferences;
 
 public class PreferenceManager{

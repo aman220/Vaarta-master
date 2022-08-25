@@ -3,7 +3,6 @@ package com.example.application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -44,7 +43,7 @@ public class Activity_user_profile extends AppCompatActivity {
         binding = ActivityUserProfileBinding.inflate(getLayoutInflater());
         preferenceManager = new PreferenceManager(getApplicationContext());
         setContentView(binding.getRoot());
-        setListerners();
+//        setListerners();
         binding.progressBar.setVisibility(View.VISIBLE);
         Bundle extras = getIntent().getExtras();
         String user = extras.getString("userType");
@@ -52,7 +51,6 @@ public class Activity_user_profile extends AppCompatActivity {
         if(user.equals("self")){
             getUsersSearched(extras.getString("token"));
         }else if(user.equals("other")){
-            binding.editprofile.setVisibility(View.GONE);
             getUsersSearched(extras.getString("token"));
         }
     }
@@ -73,15 +71,7 @@ public class Activity_user_profile extends AppCompatActivity {
         }, 100);
     }
 
-    private void setListerners(){
 
-        binding.editprofile.setOnClickListener(v -> goEdit());
-    }
-
-    private void goEdit() {
-        Intent i = new Intent (this, UserUpdate.class);
-        startActivity(i);
-    }
 
     private void getUsersSearched(String s) {
         Loading(true);

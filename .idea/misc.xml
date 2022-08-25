@@ -3,32 +3,68 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/circleyellowfil.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/ic_gold_medal.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/ic_photo_camera.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/ic_poster.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/ic_white_board.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/background_image.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/background_meeting_invitation.xml" value="0.134" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_add.xml" value="0.134" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_attachment.xml" value="0.168" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_close_back.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_conference.xml" value="0.161" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_copy.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_mic.xml" value="0.134" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_noun_broken_image.xml" value="0.1355" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/ic_noun_loading_image.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/record_button.xml" value="0.134" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/skeleton.xml" value="0.161" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/drawable/translate.xml" value="0.154" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_add_story.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_audiorecorder.xml" value="0.22" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_camera.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_chat.xml" value="0.12" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_incoming_invitation.xml" value="0.16898148148148148" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_main.xml" value="0.18" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_otp_send.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_otp_verify.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_profile.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_outgoing_invitation.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_profile.xml" value="0.18" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_record_view.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_send_image.xml" value="0.14" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_profile.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_update.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_users.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/fullscreen_image_view.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_send_video.xml" value="0.15" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_splash_screen.xml" value="0.1675929884566054" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_translate_call.xml" value="0.14" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_profile.xml" value="0.2" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_user_update.xml" value="0.16" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/activity_users.xml" value="0.16" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/audio_view.xml" value="0.16" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/content_audiorecorder.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/fragment_first.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/fragment_second.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/fullscreen_image_view.xml" value="0.22" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_received_image.xml" value="0.33" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_recent_conversion.xml" value="0.17028985507246377" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_received_voice.xml" value="0.1675929884566054" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_recent_conversion.xml" value="0.33" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_recevied_message.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_image.xml" value="0.25" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_message.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_message.xml" value="0.18" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_send_voice.xml" value="0.14" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_story.xml" value="0.21" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_user.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/message_popup_menu.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/item_container_users_skeleton.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/layout_filter_view.xml" value="0.1675929884566054" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/login.xml" value="0.1675929884566054" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/media_popup_menu.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/message_popup_delete_dialog.xml" value="0.25" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/message_popup_menu.xml" value="0.5" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/search_list_item_costome_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/signup.xml" value="0.15" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/test.xml" value="0.33" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/layout/voiceplayer.xml" value="0.18" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/menu/main.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/Application/app/src/main/res/menu/navigation_menu.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/amanr/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/background_chat_input.xml" value="0.2203125" />
         <entry key="..\:/Users/amanr/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/background_content_top.xml" value="0.2203125" />
         <entry key="..\:/Users/amanr/AndroidStudioProjects/Application/app/src/main/res/drawable-v24/background_received_message.xml" value="0.2203125" />

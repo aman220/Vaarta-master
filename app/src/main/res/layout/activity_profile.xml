@@ -1,142 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activity_profile"
+    android:animateLayoutChanges="true"
     android:background="@color/primary">
 
-    <LinearLayout
-        android:id="@+id/topbar"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
-        android:layout_alignParentTop="true"
-        android:gravity="center_vertical"
-        android:padding="0dp">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ic_Back"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/background_icon"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"/>
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="10dp"
-            android:id="@+id/ic_back"
-            android:src="@drawable/ic_back"
-            app:tint="@color/white"
-            android:background="@drawable/background_icon"/>
-
-        <!--suppress AndroidUnresolvableTag -->
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="Profile"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!--suppress AndroidUnresolvableTag -->
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:padding="6dp"
-                android:src="@drawable/ic_notifications_white_24dp" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:padding="4dp"
-                android:src="@drawable/circleyellowfil"
-                app:tint="#FFFFFF" />
-        </RelativeLayout>
-    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/prof_setting"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/background_icon"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/ic_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"/>
 
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/imageProfile"
-        android:layout_width="@dimen/_90sdp"
-        android:layout_height="@dimen/_90sdp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_width="140.00dp"
+        android:layout_height="140.00dp"
         android:background="@drawable/background_image"
         android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_10sdp"
         app:riv_oval="true" />
 
     <TextView
-        android:id="@+id/textUsername"
-        android:layout_width="match_parent"
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageProfile"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/ubuntu_bold"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textColor="@color/colorTextIcons"
-        android:textSize="@dimen/_18ssp" />
+        android:layout_below="@id/imageProfile"
+        android:layout_marginTop="@dimen/_5sdp"
+        app:layout_constraintTop_toBottomOf="@id/imageProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textEmail"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textUsername"
-        android:fontFamily="@font/ubuntu_regular"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textColor="@color/colorTextIcons"
-        android:textSize="@dimen/_11ssp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@id/name"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_180sdp"
-        android:background="@drawable/background_constant_bottom">
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/background_constant_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textEmail">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hii, User"
+            android:textSize="@dimen/_25sdp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/ubuntu_bold">
+        </TextView>
+        <ImageView
+            android:id="@+id/editprofile"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:background="@drawable/background_icon"
+            android:padding="5dp"
+            android:src="@drawable/mode_edit"
+            android:visibility="visible" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            android:layout_margin="@dimen/_20sdp"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="20dp">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginVertical="60dp"
+            android:layout_marginTop="@dimen/_40sdp"
+            app:cardCornerRadius="30dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:fontFamily="@font/ubuntu_regular"
                 android:includeFontPadding="false"
                 android:text="Bio"
                 android:textColor="@color/colorPrimaryText"
-                android:textSize="@dimen/_11ssp"
+                android:textSize="@dimen/_15ssp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/bio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_9sdp"
+                android:layout_marginTop="@dimen/_27sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@null"
                 android:fontFamily="@font/ubuntu_regular"
@@ -162,8 +157,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Contact"
+                        android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginLeft="@dimen/_3sdp"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_15ssp"
                         android:textColor="@color/colorPrimaryText"
                         android:textStyle="bold" />
 
@@ -173,20 +169,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <TextView
-                        android:id="@+id/editprofile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:text="Edit"
-                        android:onClick="goprofile"
-                        android:textColor="#FFCF66"
-                        android:textSize="@dimen/_14sdp" />
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
@@ -266,12 +254,15 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </FrameLayout>
+
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/cardview_light_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/navigation_menu" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

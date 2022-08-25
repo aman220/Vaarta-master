@@ -39,7 +39,19 @@
         android:id="@+id/imgView"
         app:layout_constraintTop_toBottomOf="@id/layout_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_100sdp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_450sdp"
+        android:id="@+id/textShow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/ProgressCircle"
+        app:layout_constraintTop_toBottomOf="@id/imgView">
+
+    </TextView>
 
     <ImageView
         android:id="@+id/imagView"
@@ -48,7 +60,7 @@
         android:layout_height="300dp" />
 
     <com.github.jorgecastilloprz.FABProgressCircle
-        android:id="@+id/fabProgressCircle"
+        android:id="@+id/ProgressCircle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:arcColor="#00ffff"

@@ -8,13 +8,85 @@
     android:background="@color/primary"
     tools:context=".ChatActivity">
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_popup_media"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="gone"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginVertical="50dp"
+        android:layout_marginTop="@dimen/_40sdp"
+        app:layout_constraintBottom_toTopOf="@id/layoutSend"
+        app:cardCornerRadius="30dp">
+
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_camera"
+                android:background="@drawable/background_image"
+                android:padding="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+            </ImageView>
+
+
+        <ImageView
+            android:id="@+id/Send_Image_Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="@dimen/_95sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/background_image"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ic_attachment">
+        </ImageView>
+
+
+        <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_document"
+                android:background="@drawable/background_image"
+                android:padding="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_180sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+        </ImageView>
+
+
+
+            <ImageView
+                android:id="@+id/Send_video_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_document"
+                android:background="@drawable/background_image"
+                android:padding="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_100sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+            </ImageView>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
     <View
         android:id="@+id/viewBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/_16sdp"
         android:background="@drawable/background_content_top"
-        app:layout_constraintBottom_toTopOf="@id/layoutSend"
+        app:layout_constraintBottom_toTopOf="@id/messageLayout"
         app:layout_constraintTop_toTopOf="@id/viewSupporter" />
 
 
@@ -39,6 +111,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
         app:riv_oval="true" />
+
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/translateMenu"
@@ -75,6 +149,7 @@
 
         <!--suppress AndroidUnresolvableTag -->
         <ImageView
+            android:id="@+id/swap"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -102,17 +177,7 @@
             app:smsp_selectedItemListColor="@color/white" />
     </androidx.cardview.widget.CardView>
 
-    <!--    <androidx.appcompat.widget.AppCompatImageView-->
-<!--        android:id="@+id/translateOptionsButton"-->
-<!--        android:layout_width="@dimen/_30sdp"-->
-<!--        android:layout_height="@dimen/_30sdp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="69dp"-->
-<!--        android:padding="@dimen/_4sdp"-->
-<!--        android:src="@drawable/ic_filter_white"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:tint="@color/white" />-->
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageBack"
@@ -128,12 +193,24 @@
         app:tint="@color/white" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ImageCall"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_2sdp"
+        android:layout_marginRight="@dimen/_2sdp"
+        android:src="@drawable/ic_call_24dp"
+        app:layout_constraintEnd_toStartOf="@id/imageInfo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageInfo"
         android:layout_width="@dimen/_30sdp"
         android:layout_height="@dimen/_30sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:layout_marginEnd="@dimen/_16sdp"
-        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginEnd="@dimen/_9sdp"
+        android:layout_marginRight="@dimen/_9sdp"
         android:src="@drawable/translate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -161,6 +238,69 @@
         app:layout_constraintStart_toEndOf="@id/imageBack"
         app:layout_constraintTop_toTopOf="@id/imageBack"
         app:layout_constraintVertical_bias="0.0" />
+
+    <FrameLayout
+        android:id="@+id/layoutEdit"
+        android:visibility="gone"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:background="@drawable/background_chat_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width= "match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_accept"
+            android:tint="@color/white" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/editMessageSnack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:visibility="gone"
+        android:paddingStart="40dp"
+        android:paddingEnd="27dp"
+        android:paddingVertical="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBackground"
+        app:layout_constraintTop_toBottomOf="@+id/viewBackground"
+        app:stackFromEnd="true" >
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/mode_edit"
+            app:tint="@color/white" />
+        <TextView
+            android:layout_marginStart="20dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:text="Edit Message"/>
+        <FrameLayout
+            android:layout_gravity="end"
+            android:id="@+id/removeEditSnack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/background_chat_input">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width= "match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:src="@drawable/ic_reject"
+                android:tint="@color/white" />
+        </FrameLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/statusText"
@@ -193,7 +333,7 @@
         android:layout_marginEnd="15dp"
         android:background="@drawable/useronline"
         app:layout_constraintBottom_toBottomOf="@+id/imageInfo"
-        app:layout_constraintEnd_toStartOf="@id/imageInfo"
+        app:layout_constraintEnd_toStartOf="@id/ImageCall"
         app:layout_constraintTop_toTopOf="parent"
         app:riv_oval="true" />
 
@@ -203,10 +343,8 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:overScrollMode="never"
-        android:padding="@dimen/_20sdp"
+        android:padding="@dimen/_30sdp"
         app:stackFromEnd="true"
-        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="@id/viewBackground"
         app:layout_constraintTop_toBottomOf="@id/viewSupporter" />
@@ -237,23 +375,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_4sdp"
+            android:visibility="invisible"
             android:layout_marginLeft="@dimen/_4sdp"
             android:padding="@dimen/_8sdp"
             android:src="@drawable/ic_send"
             android:tint="@color/white" />
 
-<!--        <com.devlomi.record_view.RecordButton-->
-<!--            android:id="@+id/recordbutton"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:scaleType="centerInside"-->
-<!--            android:tint="@color/colorAccent"-->
-<!--            app:mic_icon="@drawable/recv_ic_mic_white" />-->
+
 
     </FrameLayout>
-
 
     <FrameLayout
         android:id="@+id/messageLayout"
@@ -269,21 +399,6 @@
         app:layout_constraintEnd_toStartOf="@+id/layoutSend"
         app:layout_constraintStart_toStartOf="parent">
 
-
-
-<!--        <com.devlomi.record_view.RecordView-->
-<!--            android:id="@+id/recordview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_toLeftOf="@id/recordbutton"-->
-<!--            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"-->
-<!--            app:slide_to_cancel_arrow_color="#000000"-->
-<!--            app:slide_to_cancel_bounds="8dp"-->
-<!--            android:visibility="visible"-->
-<!--            app:slide_to_cancel_margin_right="10dp"-->
-<!--            app:slide_to_cancel_text="Slide To Cancel"-->
-<!--            app:counter_time_color="#ff0000" />-->
 
         <EditText
             android:layout_gravity="start"
@@ -314,6 +429,46 @@
             android:src="@drawable/ic_attachment"
             tools:layout_editor_absoluteX="10dp"
             tools:layout_editor_absoluteY="645dp" />
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/record_view_relative_layout"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/layoutSend"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.devlomi.record_view.RecordView
+            android:id="@+id/record_view"
+            android:layout_width="309dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/record_button"
+            app:cancel_text="CANCEL"
+            app:cancel_text_color="#ff0000"
+            app:cancel_text_margin_right="10dp"
+            app:counter_time_color="#ff0000"
+            app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+            app:slide_to_cancel_arrow_color="#000000"
+            app:slide_to_cancel_bounds="10dp"
+            app:slide_to_cancel_margin_right="10dp"
+            app:slide_to_cancel_text="Slide To Cancel" />
+
+        <com.devlomi.record_view.RecordButton
+            android:id="@+id/record_button"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:scaleType="centerInside"
+            android:layout_gravity="end"
+            app:mic_icon="@drawable/recv_ic_mic_white"
+            app:send_icon="@drawable/recv_ic_send"/>
 
     </FrameLayout>
 

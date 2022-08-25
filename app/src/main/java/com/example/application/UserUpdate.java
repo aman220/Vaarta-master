@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,8 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.application.activities.MainActivity;
-import com.example.application.activities.UsersActivity;
 import com.example.application.activities.login;
 import com.example.application.databinding.ActivityUserUpdateBinding;
 import com.example.application.models.User;
@@ -57,35 +54,6 @@ public class UserUpdate extends AppCompatActivity {
         setListerners();
         loadReceiverDetails();
 //        getUser();
-
-
-        bottomNavigationView  = findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_search:
-                        startActivity(new Intent(getApplicationContext()
-                                , UsersActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.menu_account:
-                        return true;
-                    case R.id.menu_music:
-                        startActivity(new Intent(getApplicationContext()
-                                , camera.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.menu_home:
-                        startActivity(new Intent(getApplicationContext()
-                                , MainActivity.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                }
-                return false;
-            }
-        });
-
     }
 
 
@@ -102,10 +70,8 @@ public class UserUpdate extends AppCompatActivity {
         binding.imageProfile.setImageBitmap(bitmap);
     }
 
-    public void goprofile(View view){
-        Intent i = new Intent(this, AddStoryActivity.class);
-        startActivity(i);
-    }
+
+
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -178,6 +144,7 @@ public class UserUpdate extends AppCompatActivity {
     //update user details in firebase
 
     private void UserUpdate (){
+        loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         DocumentReference documentReference = database.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID));
 
@@ -199,8 +166,20 @@ public class UserUpdate extends AppCompatActivity {
                     Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(exception ->{
+                    loading(false);
                     Toast.makeText(getApplicationContext(),"Failed to update Profile ",Toast.LENGTH_SHORT).show();
                 });
+    }
+
+
+    private void loading (Boolean isLoading){
+        if(isLoading) {
+            binding.buttonupdate.setVisibility(View.INVISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+        }else {
+            binding.progressBar.setVisibility(View.INVISIBLE);
+            binding.buttonupdate.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -262,7 +241,7 @@ public class UserUpdate extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
-        bottomNavigationView.setSelectedItemId(R.id.menu_account);
+//        bottomNavigationView.setSelectedItemId(R.id.menu_account);
     }
 
 }

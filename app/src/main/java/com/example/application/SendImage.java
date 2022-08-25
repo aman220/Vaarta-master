@@ -6,15 +6,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
+import android.util.SparseArray;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.example.application.databinding.ActivityChatBinding;
 import com.example.application.databinding.ActivitySendImageBinding;
 import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
@@ -22,6 +20,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.TextBlock;
+import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,16 +37,12 @@ import java.util.HashMap;
 public class SendImage extends AppCompatActivity {
 
 
-
     private ActivitySendImageBinding binding;
-    private ActivityChatBinding chat;
     private PreferenceManager preferenceManager;
-    private Button btnupload;
     private Uri filePath;
     private String fileName;
     FirebaseStorage storage;
     StorageReference storageReference;
-    private Snackbar snackbar;
     private final int PICK_IMAGE_REQUEST = 22;
 
     @Override
@@ -57,21 +54,12 @@ public class SendImage extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        binding.btnChoose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SelectImage();
-            }
-        });
+        binding.btnChoose.setOnClickListener(v -> SelectImage());
 
-        binding.fabProgressCircle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UploadImage();
-            }
-        });
+        binding.ProgressCircle.setOnClickListener(v -> UploadImage());
 
     }
+
 
     private void SelectImage() {
         Intent intent = new Intent();
@@ -99,16 +87,31 @@ public class SendImage extends AppCompatActivity {
                 Glide.with(binding.getRoot().getContext())
                         .load(filePath)
                         .into(binding.imgView);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                TextRecognizer txtRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+                Frame frame = new Frame.Builder().setBitmap(bitmap).build();
+                SparseArray items = txtRecognizer.detect(frame);
+                StringBuilder strBuilder = new StringBuilder();
+                for (int i = 0; i < items.size(); i++) {
+                    TextBlock item = (TextBlock) items.valueAt(i);
+                    strBuilder.append(item.getValue());
+                    binding.textShow.setText(strBuilder);
+                }
             } catch (Exception e) {
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                    binding.imgView.setImageBitmap(bitmap);
+                    binding.imagView.setImageBitmap(bitmap);
+
                 }catch (Exception e1) {
                     e1.printStackTrace();
+
                 }
             }
+
         }
+
     }
+
 
     private void UploadImage(){
 
@@ -122,7 +125,7 @@ public class SendImage extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             Snackbar snack = Snackbar.make(binding.getRoot(), "Uploading...", Snackbar.LENGTH_INDEFINITE);
             snack.show();
-            binding.fabProgressCircle.show();
+            binding.ProgressCircle.show();
             Bundle data = getIntent().getExtras();
             String receiverId = data.getString("receiverId");
             StorageReference ref = storageReference.child("chats/media/images/"+ fileName);
@@ -145,26 +148,23 @@ public class SendImage extends AppCompatActivity {
                             message.put(Constants.MEDIA_TYPE,"image");
                             message.put(Constants.KEY_TIMESTAMP, new Date());
                             database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-                            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                            startActivity(intent);
                         }
                     });
-                    binding.fabProgressCircle.beginFinalAnimation();
-                    binding.fabProgressCircle.hide();
+                    binding.ProgressCircle.beginFinalAnimation();
+                    binding.ProgressCircle.hide();
                     snack.dismiss();
-                    Snackbar.make(binding.fabProgressCircle, "Cloud_upload_complete", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.ProgressCircle, "Cloud_upload_complete", Snackbar.LENGTH_LONG)
                             .setAction("Action", null)
                             .show();
-
+                    finish();
                 }
             })
-
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            binding.fabProgressCircle.beginFinalAnimation();
-                            binding.fabProgressCircle.hide();
+                            binding.ProgressCircle.beginFinalAnimation();
+                            binding.ProgressCircle.hide();
                             snack.dismiss();
                             Toast.makeText(SendImage.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }

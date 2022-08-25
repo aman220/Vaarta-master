@@ -9,6 +9,10 @@ public class ChatMessage {
     public Date dateObject;
     public String conversionId,conversionName,conversionImage ;
     public String imageUrl;
+    public String audioUrl;
+    public String videoUrl;
     public String mediaType;
+    public String messageId;
+    public String messageVisibility;
 }
 

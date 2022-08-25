@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:id="@+id/textAddImage"
-                android:text="@string/add_image"
+                android:text="@string/Add_image"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/_10ssp"/>
 

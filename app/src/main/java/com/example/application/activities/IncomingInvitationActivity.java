@@ -43,7 +43,7 @@ public class IncomingInvitationActivity extends AppCompatActivity {
 
         if (meetingType != null) {
             if (meetingType.equals("video")) {
-                imageMeetingType.setImageResource(R.drawable.ic_video);
+                imageMeetingType.setImageResource(R.drawable.ic_videoajdf);
             } else {
                 imageMeetingType.setImageResource(R.drawable.ic_audio);
             }

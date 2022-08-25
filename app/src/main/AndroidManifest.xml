@@ -7,11 +7,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <meta-data
+        android:name="com.google.mlkit.vision.DEPENDENCIES"
+        android:value="ocr" />
+
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
@@ -20,9 +22,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Application">
+        <activity
+            android:name=".Activity_send_video"
+            android:exported="false" />
+        <activity
+            android:name=".TranslateCall"
+            android:exported="false" />
         <activity
             android:name=".AddStoryActivity"
             android:exported="false" />
@@ -32,8 +41,7 @@
         <activity
             android:name=".SendImage"
             android:exported="false" />
-        <activity android:name=".Activity_profile">
-        </activity>
+        <activity android:name=".Activity_profile" />
         <activity
             android:name=".camera"
             android:exported="false" />
@@ -56,6 +64,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+
         <activity
             android:name=".activities.login"
             android:windowSoftInputMode="adjustResize" />

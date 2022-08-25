@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
@@ -78,12 +77,10 @@ public class Activity_profile extends AppCompatActivity {
     }
     private void setListeners() {
         binding.icBack.setOnClickListener(v -> onBackPressed());
+        binding.editprofile.setOnClickListener(v -> goEdit());
     }
-
-
-
-    public void goprofile(View view){
-        Intent i = new Intent(this, UserUpdate.class);
+    private void goEdit() {
+        Intent i = new Intent (this, UserUpdate.class);
         startActivity(i);
     }
 
@@ -109,7 +106,7 @@ public class Activity_profile extends AppCompatActivity {
 
     private void loadReceiverDetails(){
         receiverUser=(User) getIntent().getSerializableExtra(Constants.KEY_USER);
-        binding.textUsername.setText(preferenceManager.getString(Constants.KEY_NAME));
+        binding.name.setText(preferenceManager.getString(Constants.KEY_NAME));
         binding.textEmail.setText(preferenceManager.getString(Constants.KEY_EMAIL));
         binding.Email.setText(preferenceManager.getString(Constants.KEY_EMAIL));
         binding.textphone.setText(preferenceManager.getString(Constants.KEY_PHONE));
@@ -119,6 +116,8 @@ public class Activity_profile extends AppCompatActivity {
         binding.imageProfile.setImageBitmap(bitmap);
         binding.imageProfile.setOnClickListener(v -> fullScreenImagePopup(this, bitmap));
     }
+
+
     protected void onResume() {
         super.onResume();
         bottomNavigationView.setSelectedItemId(R.id.menu_account);

@@ -1,10 +1,18 @@
 package com.example.application;
 
 
+import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
+
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,12 +24,19 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
+import com.devlomi.record_view.OnBasketAnimationEnd;
+import com.devlomi.record_view.OnRecordClickListener;
+import com.devlomi.record_view.OnRecordListener;
+import com.devlomi.record_view.RecordPermissionHandler;
 import com.example.application.activities.BaseActivity;
 import com.example.application.adapters.ChatAdapter;
 import com.example.application.databinding.ActivityChatBinding;
+import com.example.application.databinding.MediaPopupMenuBinding;
 import com.example.application.models.ChatMessage;
 import com.example.application.models.User;
 import com.example.application.network.ApiClient;
@@ -29,18 +44,31 @@ import com.example.application.network.ApiService;
 import com.example.application.utilities.Constants;
 import com.example.application.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -53,13 +81,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import me.mutasem.simplevoiceplayer.PlayerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChatActivity extends BaseActivity implements AdapterView.OnItemSelectedListener {
-    private ActivityChatBinding binding;
+    public ActivityChatBinding binding;
     private User receiverUser;
     private List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
@@ -68,7 +98,15 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
     private String conversionId = null;
     private Boolean isReceiverAvailable = false;
     private final Handler handler = new Handler();
-    private final Bundle bundleLangSet  = new Bundle();
+    StorageReference storageReference;
+    FirebaseStorage storage;
+    private final Bundle bundleLangSet = new Bundle();
+    private String audioPath;
+    private AudioRecorder audioRecorder;
+    private File recordFile;
+    private PlayerView playerView;
+    MediaPopupMenuBinding mediaPopupMenu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,51 +118,288 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
         loadReceiverDetails();
         init();
         listenerMessage();
+        swapTranslateLanguages();
         initSpinner();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+
+
+
+
+
+
+
+
+
         binding.imageProfile.setImageBitmap(getBitmapFromEncodedString(receiverUser.image));
+        audioRecorder = new AudioRecorder();
+        binding.recordButton.setRecordView(binding.recordView);
+
+        binding.recordButton.setOnRecordClickListener(new OnRecordClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ChatActivity.this, "RECORD BUTTON CLICKED", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.recordView.setCancelBounds(8);
+
+
+        binding.recordView.setSmallMicColor(Color.parseColor("#c2185b"));
+        binding.recordView.setLessThanSecondAllowed(false);
+
+
+        binding.recordView.setSlideToCancelText("Slide To Cancel");
+
+
+        binding.recordView.setCustomSounds(R.raw.record_start, R.raw.record_finished, 0);
+
+
+        binding.recordView.setOnRecordListener(new OnRecordListener() {
+            @Override
+            public void onStart() {
+                binding.messageLayout.setVisibility(View.INVISIBLE);
+                File file = new File(Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+                recordFile = new File(file.getAbsolutePath() + File.separator + System.currentTimeMillis() + ".mp3");
+                try {
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    audioRecorder.start(recordFile.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChatActivity.this, "Failed to create", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onCancel() {
+                stopRecording(true);
+                binding.messageLayout.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onFinish(long recordTime, boolean limitReached) {
+                binding.messageLayout.setVisibility(View.VISIBLE);
+                stopRecording(false);
+                audioRecorder.stop();
+                String time = getHumanTimeText(recordTime);
+
+                audioPath = recordFile.getPath();
+                uploadAudio(audioPath);
+            }
+
+            @Override
+            public void onLessThanSecond() {
+                stopRecording(true);
+            }
+
+        });
+        binding.recordView.setOnBasketAnimationEndListener(new OnBasketAnimationEnd() {
+            @Override
+            public void onAnimationEnd() {
+            }
+        });
+
+        binding.recordView.setRecordPermissionHandler(new RecordPermissionHandler() {
+            @Override
+            public boolean isPermissionGranted() {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    return true;
+                }
+
+                boolean recordPermissionAvailable = ContextCompat.checkSelfPermission(ChatActivity.this, Manifest.permission.RECORD_AUDIO) == PERMISSION_GRANTED;
+                if (recordPermissionAvailable) {
+                    return true;
+                }
+
+
+                ActivityCompat.
+                        requestPermissions(ChatActivity.this,
+                                new String[]{Manifest.permission.RECORD_AUDIO},
+                                0);
+
+                return false;
+
+            }
+        });
     }
+
+    private void stopRecording(boolean deleteFile) {
+        audioRecorder.stop();
+        if (recordFile != null && deleteFile) {
+            recordFile.delete();
+        }
+    }
+
+
+    private String getHumanTimeText(long milliseconds) {
+        return String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(milliseconds),
+                TimeUnit.MILLISECONDS.toSeconds(milliseconds) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliseconds)));
+    }
+
+
+    private void uploadAudio(String audioPath) {
+
+        if (audioPath != null) {
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            DocumentReference documentReference=
+                    database.collection(Constants.KEY_COLLECTION_USERS).document(
+                            preferenceManager.getString(Constants.KEY_USER_ID)
+                    );
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("audio/mpeg")
+                    .build();
+            StorageReference ref = storageReference.child("Media/Recording/"  + System.currentTimeMillis()+".mp3");
+            Uri audioFile = Uri.fromFile(new File(audioPath));
+            ref.putFile(audioFile,metadata).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    progressDialog.dismiss();
+                                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            String audioUrl=task.getResult().toString();
+                                            PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+                                            preferenceManager.putString(Constants.AUDIO_URL,audioUrl);
+                                            HashMap<String, Object> message = new HashMap<>();
+                                            message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+                                            message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
+                                            message.put(Constants.KEY_MESSAGE, "");
+                                            message.put(Constants.AUDIO_URL,audioUrl);
+                                            message.put(Constants.MEDIA_TYPE,"audio");
+                                            message.put(Constants.KEY_TIMESTAMP, new Date());
+                                            database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+                                        }
+                                    });
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(ChatActivity.this,
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int)progress + "%");
+                                }
+                            });
+        }
+    }
+
+
+
+
+
+
+
+    public static Bitmap getBitmap(String imageUrl) {
+        try {
+            InputStream is = (InputStream) new URL(imageUrl).getContent();
+            Bitmap d = BitmapFactory.decodeStream(is);
+            is.close();
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private void setListeners() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
+        binding.ImageCall.setOnClickListener(v -> initiateAudioMeeting(receiverUser));
         binding.layoutSend.setOnClickListener(v -> sendMessage());
         binding.textName.setOnClickListener(v -> loadRecieverUserInfo());
         binding.translateMenu.setVisibility(View.GONE);
-        binding.sendImageBtn.setOnClickListener(v -> {
+        binding.SendImageIcon.setOnClickListener(v -> {
             Bundle chatData = new Bundle();
             chatData.putString("receiverId", receiverUser.id);
             chatData.putString("receiverName", receiverUser.name);
-            chatData.putString("receiverImage", receiverUser.image);
             chatData.putString("token",receiverUser.token);
             chatData.putString("conversionId", conversionId);
-
             Intent intent = new Intent(getApplicationContext(), SendImage.class);
             intent.putExtras(chatData);
             startActivity(intent);
         } );
+        binding.SendVideoIcon.setOnClickListener(v -> {
+            Bundle chatData = new Bundle();
+            chatData.putString("receiverId", receiverUser.id);
+            chatData.putString("receiverName", receiverUser.name);
+//            chatData.putString("receiverImage", receiverUser.image);
+            chatData.putString("token",receiverUser.token);
+            chatData.putString("conversionId", conversionId);
+            Intent intent = new Intent(getApplicationContext(), Activity_send_video.class);
+            intent.putExtras(chatData);
+            startActivity(intent);
+        } );
+        binding.sendImageBtn.setOnClickListener(v -> {
+            if (binding.cardPopupMedia.getVisibility() == View.GONE) {
+                binding.cardPopupMedia.setVisibility(View.VISIBLE);
+            }else {
+                binding.cardPopupMedia.setVisibility(View.GONE);
+            }
+        } );
+
+
         binding.imageInfo.setOnClickListener(v -> {
+
             if (binding.translateMenu.getVisibility() == View.GONE) {
                 binding.translateMenu.setVisibility(View.VISIBLE);
             }else {
                 binding.translateMenu.setVisibility(View.GONE);
             }
         });
+
+
+
+
+
         binding.chatRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 chatAdapter.getItemCount();
                 if(newState == RecyclerView.SCROLL_STATE_DRAGGING){
-//
+
                 }
             }
         });
     }
+
 
     private void swapTranslateLanguages() {
         String tempFromLang = preferenceManager.getString(Constants.FROM_LANGUAGE);
         preferenceManager.putString(Constants.FROM_LANGUAGE,preferenceManager.getString(Constants.TO_LANGUAGE));
         preferenceManager.putString(Constants.TO_LANGUAGE,tempFromLang);
         initSpinner();
-        Toast.makeText(this, "Swapped", Toast.LENGTH_SHORT).show();
     }
 
     private void initSpinner() {
@@ -156,6 +431,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
                 bundleLangSet.putInt("from",getLanguageCode(preferenceManager.getString(Constants.FROM_LANGUAGE)));
                 bundleLangSet.putInt("to",getLanguageCode(preferenceManager.getString(Constants.TO_LANGUAGE)));
                 chatAdapter = new ChatAdapter(
+                        ChatActivity.this,
                         chatMessages,
                         getBitmapFromEncodedString(receiverUser.image),
                         preferenceManager.getString(Constants.KEY_USER_ID),
@@ -171,6 +447,8 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
             public void onNothingSelected(AdapterView<?> adapterView) { /* TODO document why this method is empty */ }
         });
     }
+
+
 
     public int getLanguageCode(String language){
         int languageCode;
@@ -228,7 +506,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
         preferenceManager.putString(Constants.TO_LANGUAGE, "Default");
         chatMessages = new ArrayList<>();
         chatAdapter = new ChatAdapter(
-                chatMessages,
+                ChatActivity.this,chatMessages,
                 getBitmapFromEncodedString(receiverUser.image),
                 preferenceManager.getString(Constants.KEY_USER_ID),
                 bundleLangSet,
@@ -253,9 +531,9 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString().trim());
         message.put(Constants.KEY_TIMESTAMP, new Date());
-        message.put(Constants.IMAGE_URL, "");
         message.put(Constants.MEDIA_TYPE,"text");
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
+        didConversationExists();
         if (conversionId != null) {
             updateConversion(binding.inputMessage.getText().toString().trim());
         } else {
@@ -266,7 +544,6 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
             conversion.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
             conversion.put(Constants.KEY_RECEIVER_NAME, receiverUser.name);
             conversion.put(Constants.KEY_RECEIVER_IMAGE, receiverUser.image);
-            conversion.put(Constants.IMAGE_URL, "");
             conversion.put(Constants.MEDIA_TYPE,"text");
             conversion.put(Constants.KEY_RECEIVER_TOKEN, receiverUser.token);
             conversion.put(Constants.KEY_LAST_MESSAGE, binding.inputMessage.getText().toString().trim());
@@ -358,6 +635,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
             } else {
                 binding.textAvailability.setVisibility(View.GONE);
             }
+
         });
     }
     private void listenerMessage() {
@@ -379,13 +657,20 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
                     ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.messageId = documentChange.getDocument().getId();
                     chatMessage.senderId = documentChange.getDocument().getString(Constants.KEY_SENDER_ID);
                     chatMessage.receiverId = documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID);
                     chatMessage.message = documentChange.getDocument().getString(Constants.KEY_MESSAGE);
                     chatMessage.imageUrl = documentChange.getDocument().getString(Constants.IMAGE_URL);
+                    chatMessage.audioUrl = documentChange.getDocument().getString(Constants.AUDIO_URL);
+                    chatMessage.videoUrl = documentChange.getDocument().getString(Constants.VIDEO_URL);
                     chatMessage.mediaType = documentChange.getDocument().getString(Constants.MEDIA_TYPE);
                     chatMessage.dateTime = getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.dateObject = documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP);
+                    chatMessage.messageVisibility = documentChange.getDocument().getString(Constants.MESSAGE_VISIBILITY);
+                    if (chatMessage.messageVisibility == null) {
+                        chatMessage.messageVisibility = "everyone";
+                    }
                     chatMessages.add(chatMessage);
                     chatAdapter.notifyDataSetChanged();
                     try {
@@ -439,10 +724,28 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
         DocumentReference documentReference =
                 database.collection(Constants.KEY_COLLECTION_CONVERSATIONS).document(conversionId);
         documentReference.update(
-                Constants.KEY_LAST_MESSAGE, message,
-                Constants.KEY_TIMESTAMP, new Date()
-        );
+                Constants.KEY_LAST_MESSAGE, message);
+//                Constants.KEY_IMAGE, getBitmapFromEncodedString(receiverUser.image)
+ 
     }
+    public void didConversationExists() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_CONVERSATIONS)
+                .get()
+                .addOnCompleteListener(task -> {
+                    String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<User> users = new ArrayList<>();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            if (queryDocumentSnapshot.get(Constants.KEY_SENDER_ID).equals(currentUserId) && queryDocumentSnapshot.get(Constants.KEY_RECEIVER_ID).equals(receiverUser.id)) {
+                                conversionId = queryDocumentSnapshot.getId();
+                            }
+                        }
+                    }
+                });
+    }
+
+
     private void checkForConversion() {
         if (chatMessages.size() != 0) {
             checkForConversionRemotely(
@@ -493,6 +796,13 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
                         }
                     }, 100);
                 }
+                if (binding.inputMessage.getText().toString().trim().length() > 0) {
+                    binding.recordButton.setVisibility(View.GONE);
+                    binding.msgSend.setVisibility(View.VISIBLE);
+                }else {
+                    binding.recordButton.setVisibility(View.VISIBLE);
+                    binding.msgSend.setVisibility(View.GONE);
+                }
             }
             public void afterTextChanged(Editable s) {
                 Handler handler = new Handler();
@@ -502,6 +812,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
                     }
                 }, 3000);
             }
+
         });
     }
 
@@ -524,7 +835,7 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
         @Override
         public void run() {
             String metaStatus = receiverUser.status;
-            if (metaStatus.indexOf("|") != -1) {
+            if (metaStatus.contains("|")) {
                 String[] meta = metaStatus.split("\\|");
                 if (meta[0].equals("typing")&&meta[1].equals(receiverUser.token)) {
                     binding.statusText.setText(meta[0]);
@@ -606,10 +917,30 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+        Toast.makeText(this, "Selected: " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+    public void initiateAudioMeeting(User user) {
+        if (user.token==null || user.token.trim().isEmpty()){
+            Toast.makeText(
+                    this,
+                    user.name+"is not available for meeting ",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }else {
+            Intent intent=new Intent(getApplicationContext(), TranslateCall.class);
+            intent.putExtra("user",user);
+            intent.putExtra("image", user.getImage());
+            intent.putExtra("type","audio");
+            startActivity(intent);
+        }
+    }
+
 }

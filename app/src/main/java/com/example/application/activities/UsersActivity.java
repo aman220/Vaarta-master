@@ -90,6 +90,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 getUsersSearched(search.getText().toString());
+                binding.progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -97,7 +98,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
     }
 
     private void setListerners(){
-
         binding.imageBack.setOnClickListener(v -> onBackPressed());
     }
 
@@ -148,8 +148,10 @@ public class UsersActivity extends BaseActivity implements UserListener {
 
     private void Loading(Boolean isloading) {
         if (isloading) {
+            binding.progressBar.startShimmerAnimation();
             binding.progressBar.setVisibility(View.VISIBLE);
         } else {
+            binding.progressBar.stopShimmerAnimation();
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
@@ -164,10 +166,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
         finish();
     }
 
-    @Override
-    public void onUserClicked2(User user) {
 
-    }
 
 
     @Override
@@ -231,5 +230,6 @@ public class UsersActivity extends BaseActivity implements UserListener {
     protected void onResume() {
         super.onResume();
         bottomNavigationView.setSelectedItemId(R.id.menu_search);
+        binding.progressBar.startShimmerAnimation();
     }
 }

@@ -56,6 +56,16 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
                 android:maxWidth="200dp"/>
+
+            <me.mutasem.simplevoiceplayer.PlayerView
+                android:id="@+id/audioMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </me.mutasem.simplevoiceplayer.PlayerView>
+
             <ImageView
                 android:visibility="gone"
                 android:id="@+id/imageMessage"
