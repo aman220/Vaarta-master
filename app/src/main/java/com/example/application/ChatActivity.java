@@ -404,7 +404,16 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
 
     private void initSpinner() {
         String[] languageArray = {"Default","English", "African", "Arabic", "Belarusian", "Bulgarian", "Bengali",
-                "Catalan", "Czech", "Welsh", "Hindi", "Urdu" };
+                "Catalan", "Czech", "Welsh", "Hindi", "Urdu","German",
+
+        "Spanish",
+        "French",
+         "Italian",
+        "Japanese",
+        "Russian",
+        "Tamil",
+        "Chinese",
+        "Marathi"};
         ArrayList<String> languageArrayList = new ArrayList<>();
         Collections.addAll(languageArrayList, languageArray);
         setSpinner(binding.spinnerFromLanguage, languageArrayList, "from");
@@ -480,8 +489,32 @@ public class ChatActivity extends BaseActivity implements AdapterView.OnItemSele
             case "Hindi":
                 languageCode= FirebaseTranslateLanguage.HI;
                 break;
-            case "Urdu":
-                languageCode= FirebaseTranslateLanguage.UR;
+            case "German":
+                languageCode= FirebaseTranslateLanguage.DE;
+                break;
+            case "Spanish":
+                languageCode= FirebaseTranslateLanguage.ES;
+                break;
+            case "French":
+                languageCode= FirebaseTranslateLanguage.FR;
+                break;
+            case "Italian":
+                languageCode= FirebaseTranslateLanguage.IT;
+                break;
+            case "Japanese":
+                languageCode= FirebaseTranslateLanguage.JA;
+                break;
+            case "Russian":
+                languageCode= FirebaseTranslateLanguage.RU;
+                break;
+            case "Tamil":
+                languageCode= FirebaseTranslateLanguage.TA;
+                break;
+            case "Chinese":
+                languageCode= FirebaseTranslateLanguage.ZH;
+                break;
+            case "Marathi":
+                languageCode= FirebaseTranslateLanguage.MR;
                 break;
             default:
                 languageCode=0;

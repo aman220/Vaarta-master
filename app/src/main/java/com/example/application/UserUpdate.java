@@ -164,6 +164,10 @@ public class UserUpdate extends AppCompatActivity {
                     preferenceManager.putString(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
                     preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
                     Toast.makeText(this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), Activity_profile.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    loading(false);
                 })
                 .addOnFailureListener(exception ->{
                     loading(false);
