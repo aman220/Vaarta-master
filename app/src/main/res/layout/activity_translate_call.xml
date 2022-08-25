@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_meeting_invitation"
+    tools:context=".TranslateCall">
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        android:padding="@dimen/_20sdp"
+        app:stackFromEnd="true"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:text="Sending....."-->
+<!--        android:id="@+id/sendid"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/txtSpeechInput"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="15dp"-->
+<!--        android:textStyle="normal" />-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Input:"
+        android:textSize="18sp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:layout_marginBottom="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/card_cll" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Output:"
+        android:textSize="18sp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_30sdp"
+        android:layout_marginBottom="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/card_cll2" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_cll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100ssp"
+        android:layout_marginHorizontal="25dp"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintHorizontal_bias="0.32"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textUsername">
+
+
+        <TextView
+            android:id="@+id/txtSpeechInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textUsername"
+            tools:layout_editor_absoluteY="16dp" />
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_cll2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100ssp"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="50dp"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_cll">
+        <TextView
+            android:id="@+id/translated_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="16dp" />
+    </androidx.cardview.widget.CardView>
+
+    <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+        android:id="@+id/spinnerToLanguage"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_gravity="end|center"
+        android:layout_marginStart="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_cll2"
+        app:smsp_arrowColor="@color/colorDivider"
+        app:smsp_hint="sender Language"
+        app:smsp_hintColor="@color/colorDivider"
+        app:smsp_isSearchable="true"
+        app:smsp_itemListColor="@color/colorBackground"
+        app:smsp_itemListHintBackgroundColor="#808080"
+        app:smsp_itemListHintColor="@color/colorPrimaryText"
+        app:smsp_multilineError="true"
+        app:smsp_searchBackgroundColor="@color/colorDivider"
+        app:smsp_searchDropdownView="@layout/search_list_item_costome_layout"
+        app:smsp_searchFilterColor="#FFEB3B"
+        app:smsp_searchTextColor="@color/white"
+        app:smsp_selectedItemListColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnChoose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1"
+        android:text="Convert"
+        app:layout_constraintStart_toEndOf="@+id/spinnerToLanguage"
+        app:layout_constraintTop_toBottomOf="@+id/card_cll2" />
+
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageProfile"
+        android:layout_width="@dimen/_90sdp"
+        android:layout_height="@dimen/_90sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/background_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:scaleType="centerCrop"
+        app:riv_oval="true" />
+
+    <TextView
+        android:id="@+id/textUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/ubuntu_bold"
+        app:layout_constraintTop_toBottomOf="@+id/imageProfile"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/colorTextIcons"
+        android:textSize="@dimen/_18ssp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"
+        android:gravity="center"
+        android:id="@+id/voicelayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/btnSpeak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@null"
+            android:src="@drawable/ic_mic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/tap_on_mic"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="normal" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imageRejectInvitation"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:background="@drawable/background_reject_invitation"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/_8sdp"
+        android:src="@drawable/ic_reject"
+        app:layout_constraintTop_toBottomOf="@+id/voicelayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/colorTextIcons" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
